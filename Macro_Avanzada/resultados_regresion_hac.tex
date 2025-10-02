@@ -1,0 +1,48 @@
+\begin{center}
+\begin{tabular}{lclc}
+\toprule
+\textbf{Dep. Variable:}    &  delta\_ln\_ct   & \textbf{  R-squared:         } &     0.861   \\
+\textbf{Model:}            &       OLS        & \textbf{  Adj. R-squared:    } &     0.847   \\
+\textbf{Method:}           &  Least Squares   & \textbf{  F-statistic:       } & 1.466e+04   \\
+\textbf{Date:}             & Wed, 01 Oct 2025 & \textbf{  Prob (F-statistic):} & 2.19e-194   \\
+\textbf{Time:}             &     17:27:08     & \textbf{  Log-Likelihood:    } &    598.59   \\
+\textbf{No. Observations:} &         150      & \textbf{  AIC:               } &    -1167.   \\
+\textbf{Df Residuals:}     &         135      & \textbf{  BIC:               } &    -1122.   \\
+\textbf{Df Model:}         &          14      & \textbf{                     } &             \\
+\textbf{Covariance Type:}  &       HAC        & \textbf{                     } &             \\
+\bottomrule
+\end{tabular}
+\begin{tabular}{lcccccc}
+                     & \textbf{coef} & \textbf{std err} & \textbf{t} & \textbf{P$> |$t$|$} & \textbf{[0.025} & \textbf{0.975]}  \\
+\midrule
+\textbf{const}       &       0.1563  &        0.089     &     1.749  &         0.083        &       -0.020    &        0.333     \\
+\textbf{y-c}         &      -0.0167  &        0.010     &    -1.663  &         0.099        &       -0.037    &        0.003     \\
+\textbf{r\_t^cp}     &      -0.0001  &        0.000     &    -0.268  &         0.789        &       -0.001    &        0.001     \\
+\textbf{r\_t^lp}     &      -0.0005  &        0.001     &    -0.433  &         0.665        &       -0.003    &        0.002     \\
+\textbf{delta\_u\_t} &      -0.0075  &        0.002     &    -3.298  &         0.001        &       -0.012    &       -0.003     \\
+\textbf{gap\_y^d}    &     1.06e-05  &     3.86e-06     &     2.748  &         0.007        &     2.97e-06    &     1.82e-05     \\
+\textbf{AL/y}        &      -0.8248  &        0.429     &    -1.924  &         0.056        &       -1.672    &        0.023     \\
+\textbf{IA/y}        &    1.674e-06  &     1.16e-06     &     1.448  &         0.150        &    -6.12e-07    &     3.96e-06     \\
+\textbf{2020-01-01}  &      -0.0215  &        0.001     &   -17.898  &         0.000        &       -0.024    &       -0.019     \\
+\textbf{2020-04-01}  &      -0.0363  &        0.020     &    -1.789  &         0.076        &       -0.076    &        0.004     \\
+\textbf{2020-07-01}  &       0.0493  &        0.010     &     5.101  &         0.000        &        0.030    &        0.068     \\
+\textbf{2020-10-01}  &      -0.0079  &        0.004     &    -1.932  &         0.055        &       -0.016    &        0.000     \\
+\textbf{2021-01-01}  &       0.0048  &        0.004     &     1.158  &         0.249        &       -0.003    &        0.013     \\
+\textbf{2021-04-01}  &       0.0273  &        0.001     &    29.338  &         0.000        &        0.025    &        0.029     \\
+\textbf{2021-07-01}  &      -0.0007  &        0.002     &    -0.365  &         0.715        &       -0.004    &        0.003     \\
+\bottomrule
+\end{tabular}
+\begin{tabular}{lclc}
+\textbf{Omnibus:}       & 41.985 & \textbf{  Durbin-Watson:     } &    1.900  \\
+\textbf{Prob(Omnibus):} &  0.000 & \textbf{  Jarque-Bera (JB):  } &  248.135  \\
+\textbf{Skew:}          & -0.792 & \textbf{  Prob(JB):          } & 1.31e-54  \\
+\textbf{Kurtosis:}      &  9.098 & \textbf{  Cond. No.          } & 8.50e+06  \\
+\bottomrule
+\end{tabular}
+%\caption{OLS Regression Results}
+\end{center}
+
+Notes: \newline
+ [1] Standard Errors are heteroscedasticity and autocorrelation robust (HAC) using 4 lags and without small sample correction \newline
+ [2] The condition number is large, 8.5e+06. This might indicate that there are \newline
+ strong multicollinearity or other numerical problems.
