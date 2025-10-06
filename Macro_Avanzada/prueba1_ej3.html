@@ -32,7 +32,6 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 .highlight .m { color: var(--jp-mirror-editor-number-color) } /* Literal.Number */
 .highlight .s { color: var(--jp-mirror-editor-string-color) } /* Literal.String */
 .highlight .ow { color: var(--jp-mirror-editor-operator-color); font-weight: bold } /* Operator.Word */
-.highlight .pm { color: var(--jp-mirror-editor-punctuation-color) } /* Punctuation.Marker */
 .highlight .w { color: var(--jp-mirror-editor-variable-color) } /* Text.Whitespace */
 .highlight .mb { color: var(--jp-mirror-editor-number-color) } /* Literal.Number.Bin */
 .highlight .mf { color: var(--jp-mirror-editor-number-color) } /* Literal.Number.Float */
@@ -7511,62 +7510,62 @@ a.anchor-link {
 <!-- End of mermaid configuration --></head>
 <body class="jp-Notebook" data-jp-theme-light="true" data-jp-theme-name="JupyterLab Light">
 <main>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=b69f7719">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=d2183cc8">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h1 id="Estimaci%C3%B3n-de-la-Demanda-de-Consumo-en-EE.UU.-(1987T4-%E2%80%93-2019T4-/-2024T2)">Estimación de la Demanda de Consumo en EE.UU. (1987T4 – 2019T4 / 2024T2)<a class="anchor-link" href="#Estimaci%C3%B3n-de-la-Demanda-de-Consumo-en-EE.UU.-(1987T4-%E2%80%93-2019T4-/-2024T2)">¶</a></h1><p>El objetivo del estudio es estimar una función de consumo trimestral para Estados Unidos, utilizando datos de la base FRED (Federal Reserve Bank of St. Louis).<br/>
-Se plantea un modelo dinámico con variables macroeconómicas clave y dummies para capturar los efectos del Covid-19 (2020T1 – 2021T2).</p>
-<p>La especificación general es:</p>
-<p>Δ ln(C_t) = α + β1 ln(Y_t-1) – β2 ln(C_t-1) + β3 ln(W_t) + β4 ln(AL_t-1) + β5 Δ ln(C_t-1) + … + δ (DUM_Covid) + ε_t</p>
+<div style="background-color: #cbe1f5ff; padding: 15px; border-radius: 8px;">
+<h1>Estimación de la Demanda de Consumo en EE.UU en 1987T4 – 2019T4/2024T2 </h1>
+<p>El objetivo del estudio es estimar una función de consumo trimestral para Estados Unidos, utilizando datos de la base FRED (Federal Reserve Bank of St. Louis).<br/>
+Se plantea un modelo dinámico con variables macroeconómicas clave y dummies para capturar los efectos del Covid-19 2020T1 – 2021T2.</p>
+<p>La especificación general es:
+$$
+\Delta \ln(c_t) = \beta_0 + \beta_1 \left[\ln(y_{t}^d) - \ln(c_{t-1})\right] + \beta_2 r_t^{cp} + \beta_3 r_t^{lp} + \beta_4 \Delta u_t + \beta_5 (\text{gap}_{y}^d)t + \beta_6 \frac{AL_{t-1}}{y_t^d} + \beta_7 \frac{IA_{t-1}}{y_t^d} + \epsilon_t
+$$</p>
 <hr/>
-<h2 id="Variables-del-modelo">Variables del modelo<a class="anchor-link" href="#Variables-del-modelo">¶</a></h2><ul>
-<li><p><strong>C_t: Consumo privado real</strong><br/>
+<h2 id="Variables-del-modelo">Variables del modelo<a class="anchor-link" href="#Variables-del-modelo">¶</a></h2><p>•⁠  ⁠$c_t$: Consumo privado real<br/>
 Medido en miles de millones de USD, ajustado por inflación.<br/>
 Fuente: Personal Consumption Expenditures (PCE), FRED.<br/>
-Se utiliza la variación logarítmica Δ ln(C_t) para aproximar la tasa de crecimiento.</p>
-</li>
-<li><p><strong>Y_t-1: Renta disponible real (rezagada un periodo)</strong><br/>
+Se utiliza la variación logarítmica $\Delta ln(C_t)$ para aproximar la tasa de crecimiento.</p>
+<p>•⁠  ⁠$y_t^d$: Renta disponible<br/>
 Variable fundamental que explica la capacidad de gasto de los hogares.<br/>
 Fuente: Real Disposable Personal Income, FRED.<br/>
-Se introduce en logaritmos y con rezago para captar la relación de causalidad.</p>
-</li>
-<li><p><strong>C_t-1: Consumo del periodo anterior</strong><br/>
+Se introduce en logaritmos.</p>
+<p>•⁠  ⁠$c_{t-1\,}$: Consumo del periodo anterior
 Captura la inercia y persistencia del consumo en el tiempo.<br/>
 Permite modelar el carácter dinámico del gasto de los hogares.</p>
-</li>
-<li><p><strong>W_t: Riqueza financiera o patrimonial de los hogares</strong><br/>
-Incluye activos financieros y patrimoniales (acciones, bonos, inmuebles).<br/>
-Refleja el “efecto riqueza” en el consumo.<br/>
-Fuente: Household Net Worth, FRED.</p>
-</li>
-<li><p><strong>AL_t-1: Activos líquidos (rezagados un periodo)</strong><br/>
-Representados por agregados monetarios como M3.<br/>
-Miden la disponibilidad inmediata de liquidez para financiar consumo.<br/>
-Se corrigen por inflación para obtener valores reales.</p>
-</li>
-<li><p><strong>Δ ln(C_t-1): Cambio en el consumo del trimestre anterior</strong><br/>
-Introducido como variable dinámica para recoger efectos de aceleración o freno en la evolución del gasto.</p>
-</li>
-<li><p><strong>DUM_Covid: Variables dummy (2020T1 – 2021T2)</strong><br/>
+<p>•⁠  ⁠$r_t^{cp}$, $r_t^{lp}$: Tipos de interés real de corto y largo plazo
+Fuente: 1-Year Real Interest Rate and 10-Year Real Interest Rate, FRED.
+Dado que ambos tipos de interés están registrados en frecuencia mensual, se ajustan los tipos de interés a frecuencia trimestral a partir de los promedios trimestrales.</p>
+<p>•⁠  ⁠$\Delta u_t$: Variación en la tasa de desempleo
+Fuente: Unemployment Rate, FRED.
+Estos datos también vienen dados en frecuencia mensual, por lo que se ajustan de la misma forma que los tipos de interés.
+Se incluye para estudiar cómo la variación en la tasa de paro afecta al consumo , como posible indicadora de la incertidumbre económica.</p>
+<p>•⁠  ⁠$\text{gap}_{y}^d$: Diferencia entre la renta disponible y el promedio de los últimos 4 periodos
+Se incluye para capturar el efecto de los cambios de tendencia en la renta disponible al consumo.</p>
+<p>•⁠  ⁠$AL_{t-1\,}$: Medida de los activos líquidos.
+Para ello se emplea M3. Como viene medido en términos nominales y en millones de dólares, mientras que el consumo viene dado en billones de dóleres, se procede a dividir entre $10^9$ y entre el IPC de US (Fuente: Consumer Price Index for All Urban Consumers)</p>
+<p>•⁠ $IA_{t-1}$: Medida de los activos ilíquidos.
+Representa la riqueza financiera o patrimonial menos líquida de los hogares, es decir, aquella que no puede convertirse rápidamente en dinero sin pérdida significativa de valor.<br/>
+En este contexto, los activos ilíquidos incluyen viviendas, acciones, bonos a largo plazo, fondos de pensiones y otros instrumentos de inversión no monetarios.<br/>
+Se introducen en el modelo para capturar el efecto riqueza: cuando los precios de los activos ilíquidos aumentan (por ejemplo, el valor inmobiliario o bursátil), los hogares tienden a incrementar su consumo, aun cuando su renta corriente no cambie.<br/>
+Sin embargo, el impacto de estos activos sobre el consumo suele ser menor y más lento que el de los activos líquidos, ya que su conversión en gasto requiere decisiones de desinversión o financiación.<br/>
+En la especificación, ( \frac{IA_{t-1}}{y_t^d} ) mide la proporción de riqueza ilíquida respecto a la renta disponible, indicando el grado en que la posición patrimonial de los hogares puede sostener el consumo ante shocks de ingresos.</p>
+<p>•⁠  ⁠$DUM_{Covid\,\,\,}$: Variables dummy (2020_T1 – 2021_T2)
 Seis dummies trimestrales que toman valor 1 en el trimestre correspondiente y 0 en los demás.<br/>
 Capturan el efecto extraordinario de la pandemia sobre el consumo.</p>
-</li>
-<li><p><strong>ε_t: Término de error</strong><br/>
-Recoge factores no observados que afectan al consumo.</p>
-</li>
-</ul>
+<p>•⁠  ⁠$ε_t$: Término de error<br/>
+Recoge factores no recogidos en las variables macroeconómicas empleadas que afectan al consumo.</p>
 <hr/>
 <h2 id="Concepto-general-del-estudio">Concepto general del estudio<a class="anchor-link" href="#Concepto-general-del-estudio">¶</a></h2><p>El análisis busca comprender los determinantes del consumo privado en EE.UU. desde finales de los 80 hasta la actualidad, incorporando:</p>
-<ul>
-<li>Efecto renta disponible (determinante clave del consumo).</li>
-<li>Persistencia e inercia del consumo pasado.</li>
-<li>Efecto riqueza y liquidez como factores financieros que influyen en las decisiones de gasto.</li>
-<li>Impacto del Covid-19 a través de shocks temporales capturados con dummies.</li>
-</ul>
+<p>•⁠  ⁠Efecto renta disponible (determinante clave del consumo).<br/>
+•⁠  ⁠Persistencia e inercia del consumo pasado.<br/>
+•⁠  ⁠Efecto riqueza y liquidez con factores financieros que influyen en las decisiones de gasto.<br/>
+•⁠  ⁠Impacto del Covid-19 a través de shocks temporales capturados con dummies.</p>
 <p>Se trata de un modelo de corte macroeconómico y econométrico dinámico, que permitirá estimar elasticidades de consumo y analizar cómo distintos factores explican su evolución en el largo y corto plazo.</p>
+</div>
 </div>
 </div>
 </div>
@@ -7586,17 +7585,17 @@ Recoge factores no observados que afectan al consumo.</p>
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [94]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [90]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1"># ---- 0) Imports</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">statsmodels.api</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sm</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">statsmodels.stats.api</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sms</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">statsmodels.stats.diagnostic</span><span class="w"> </span><span class="kn">import</span> <span class="n">het_white</span><span class="p">,</span> <span class="n">acorr_ljungbox</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">statsmodels.tsa.stattools</span><span class="w"> </span><span class="kn">import</span> <span class="n">adfuller</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">openpyxl</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">statsmodels.api</span> <span class="k">as</span> <span class="nn">sm</span>
+<span class="kn">import</span> <span class="nn">statsmodels.stats.api</span> <span class="k">as</span> <span class="nn">sms</span>
+<span class="kn">from</span> <span class="nn">statsmodels.stats.diagnostic</span> <span class="kn">import</span> <span class="n">het_white</span><span class="p">,</span> <span class="n">acorr_ljungbox</span>
+<span class="kn">from</span> <span class="nn">statsmodels.tsa.stattools</span> <span class="kn">import</span> <span class="n">adfuller</span>
+<span class="kn">import</span> <span class="nn">openpyxl</span>
 </pre></div>
 </div>
 </div>
@@ -7618,7 +7617,7 @@ Recoge factores no observados que afectan al consumo.</p>
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [95]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [91]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Cargar los datos desde el el Excel</span>
@@ -7637,7 +7636,7 @@ Recoge factores no observados que afectan al consumo.</p>
 </div>
 <div class="jp-OutputArea jp-Cell-outputArea">
 <div class="jp-OutputArea-child jp-OutputArea-executeResult">
-<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[95]:</div>
+<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[91]:</div>
 <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain" tabindex="0">
 <pre>t              0
 delta_ln_ct    0
@@ -7655,142 +7654,12 @@ dtype: int64</pre>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=3ee30188">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [96]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-<div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-<div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child jp-OutputArea-executeResult">
-<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[96]:</div>
-<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/html" tabindex="0">
-<div>
-<style scoped="">
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-<thead>
-<tr style="text-align: right;">
-<th></th>
-<th>t</th>
-<th>delta_ln_ct</th>
-<th>y_t^d</th>
-<th>r_t^cp</th>
-<th>r_t^lp</th>
-<th>delta_u_t</th>
-<th>gap_y^d</th>
-<th>AL_t-1</th>
-<th>IA_t-1</th>
-<th>ln_yt</th>
-<th>ln_ct-1</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<th>3</th>
-<td>1987-10-01</td>
-<td>8.676222</td>
-<td>6659.742</td>
-<td>3.166814</td>
-<td>4.687983</td>
-<td>-0.166667</td>
-<td>112.13600</td>
-<td>24.687481</td>
-<td>17926176.0</td>
-<td>8.803836</td>
-<td>8.673405</td>
-</tr>
-<tr>
-<th>4</th>
-<td>1988-01-01</td>
-<td>8.694016</td>
-<td>6769.320</td>
-<td>2.676322</td>
-<td>4.248831</td>
-<td>-0.133333</td>
-<td>158.50025</td>
-<td>24.879714</td>
-<td>18336577.0</td>
-<td>8.820156</td>
-<td>8.676222</td>
-</tr>
-<tr>
-<th>5</th>
-<td>1988-04-01</td>
-<td>8.702350</td>
-<td>6846.743</td>
-<td>2.946691</td>
-<td>4.521236</td>
-<td>-0.233333</td>
-<td>136.52875</td>
-<td>24.807003</td>
-<td>18643587.0</td>
-<td>8.831528</td>
-<td>8.694016</td>
-</tr>
-<tr>
-<th>6</th>
-<td>1988-07-01</td>
-<td>8.711342</td>
-<td>6916.391</td>
-<td>3.038948</td>
-<td>4.561986</td>
-<td>0.000000</td>
-<td>118.34200</td>
-<td>24.753948</td>
-<td>19122046.0</td>
-<td>8.841649</td>
-<td>8.702350</td>
-</tr>
-<tr>
-<th>7</th>
-<td>1988-10-01</td>
-<td>8.724579</td>
-<td>6982.304</td>
-<td>3.144644</td>
-<td>4.479552</td>
-<td>-0.133333</td>
-<td>103.61450</td>
-<td>24.612535</td>
-<td>19528780.0</td>
-<td>8.851134</td>
-<td>8.711342</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-</div>
-</div>
-</div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=ca3dea2b">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [97]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [92]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1"># ---- 2) Convertir las fechas a formato datetime</span>
@@ -7832,7 +7701,7 @@ dtype: int64</pre>
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [98]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [93]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Regresión propuesta con todas las variables independientes</span>
@@ -7863,43 +7732,43 @@ dtype: int64</pre>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
 <pre>                            OLS Regression Results                            
 ==============================================================================
-Dep. Variable:            delta_ln_ct   R-squared:                       0.984
-Model:                            OLS   Adj. R-squared:                  0.983
-Method:                 Least Squares   F-statistic:                     578.3
-Date:                Thu, 25 Sep 2025   Prob (F-statistic):          5.06e-109
-Time:                        11:42:17   Log-Likelihood:                 279.85
-No. Observations:                 144   AIC:                            -529.7
-Df Residuals:                     129   BIC:                            -485.1
+Dep. Variable:            delta_ln_ct   R-squared:                       0.861
+Model:                            OLS   Adj. R-squared:                  0.847
+Method:                 Least Squares   F-statistic:                     59.83
+Date:                Mon, 06 Oct 2025   Prob (F-statistic):           9.52e-51
+Time:                        20:44:55   Log-Likelihood:                 598.59
+No. Observations:                 150   AIC:                            -1167.
+Df Residuals:                     135   BIC:                            -1122.
 Df Model:                          14                                         
 Covariance Type:            nonrobust                                         
 ==============================================================================
                  coef    std err          t      P&gt;|t|      [0.025      0.975]
 ------------------------------------------------------------------------------
-const          9.0322      0.031    287.952      0.000       8.970       9.094
-y-c           -1.2756      0.289     -4.413      0.000      -1.848      -0.704
-r_t^cp        -0.0026      0.004     -0.687      0.493      -0.010       0.005
-r_t^lp        -0.0750      0.006    -11.987      0.000      -0.087      -0.063
-delta_u_t      0.0563      0.013      4.469      0.000       0.031       0.081
-gap_y^d        0.0002   3.16e-05      5.547      0.000       0.000       0.000
-AL/y         -53.3325     18.245     -2.923      0.004     -89.430     -17.235
-IA/y           0.0001   6.08e-06     20.541      0.000       0.000       0.000
-2020-01-01    -0.0166      0.039     -0.430      0.668      -0.093       0.060
-2020-04-01    -0.6457      0.129     -5.021      0.000      -0.900      -0.391
-2020-07-01     0.3147      0.073      4.299      0.000       0.170       0.460
-2020-10-01     0.1186      0.049      2.442      0.016       0.023       0.215
-2021-01-01     0.0005      0.060      0.009      0.993      -0.118       0.119
-2021-04-01     0.0531      0.045      1.185      0.238      -0.036       0.142
-2021-07-01     0.0148      0.042      0.348      0.728      -0.069       0.099
+const          0.1563      0.089      1.758      0.081      -0.020       0.332
+y-c           -0.0167      0.010     -1.687      0.094      -0.036       0.003
+r_t^cp        -0.0001      0.000     -0.277      0.782      -0.001       0.001
+r_t^lp        -0.0005      0.001     -0.389      0.698      -0.003       0.002
+delta_u_t     -0.0075      0.002     -4.365      0.000      -0.011      -0.004
+gap_y^d      1.06e-05   3.92e-06      2.705      0.008    2.85e-06    1.84e-05
+AL/y          -0.8248      0.605     -1.364      0.175      -2.021       0.371
+IA/y        1.674e-06   1.11e-06      1.503      0.135   -5.28e-07    3.88e-06
+2020-01-01    -0.0215      0.005     -4.423      0.000      -0.031      -0.012
+2020-04-01    -0.0363      0.017     -2.090      0.039      -0.071      -0.002
+2020-07-01     0.0493      0.009      5.726      0.000       0.032       0.066
+2020-10-01    -0.0079      0.006     -1.369      0.173      -0.019       0.004
+2021-01-01     0.0048      0.006      0.774      0.440      -0.007       0.017
+2021-04-01     0.0273      0.005      5.559      0.000       0.018       0.037
+2021-07-01    -0.0007      0.005     -0.126      0.900      -0.011       0.010
 ==============================================================================
-Omnibus:                        0.372   Durbin-Watson:                   0.666
-Prob(Omnibus):                  0.830   Jarque-Bera (JB):                0.266
-Skew:                          -0.105   Prob(JB):                        0.875
-Kurtosis:                       3.004   Cond. No.                     3.11e+07
+Omnibus:                       41.985   Durbin-Watson:                   1.900
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):              248.135
+Skew:                          -0.792   Prob(JB):                     1.31e-54
+Kurtosis:                       9.098   Cond. No.                     8.50e+06
 ==============================================================================
 
 Notes:
 [1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
-[2] The condition number is large, 3.11e+07. This might indicate that there are
+[2] The condition number is large, 8.5e+06. This might indicate that there are
 strong multicollinearity or other numerical problems.
 </pre>
 </div>
@@ -7911,7 +7780,7 @@ strong multicollinearity or other numerical problems.
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [99]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [94]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Test de heterocedasticidad (White)</span>
@@ -7931,7 +7800,7 @@ strong multicollinearity or other numerical problems.
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
 <pre>White Test for Heteroscedasticity:
-(51.13947298509392, 0.13326267898506558, 1.370065779755247, 0.1034949393058685)
+(57.72878437527887, 0.03440305532127673, 1.7048755276232477, 0.01579079633206748)
 </pre>
 </div>
 </div>
@@ -7944,7 +7813,10 @@ strong multicollinearity or other numerical problems.
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<p>Como podemos observar, ninguno de los p-valores es menor que el p=0.05. Por tanto no podemos rechazar la hipotesis H0: 'Existencia de homocedasticidad en los residuos'.</p>
+<p>El Test de White permite hacer el contraste de las siguiente hipótesis:</p>
+<p>$H_0$: Los errores poseen homocedasticidad.</p>
+<p>$H_1$: Los errors poseen heterocedasticidad.</p>
+<p>Como los p-valores del test de white son menores de 0.05 podemos rechazar la hipotesis nula, afirmando que existe heterocedasticidad en el modelo.</p>
 </div>
 </div>
 </div>
@@ -7953,11 +7825,11 @@ strong multicollinearity or other numerical problems.
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [100]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [95]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Test de autocorrelación </span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">statsmodels.stats.stattools</span><span class="w"> </span><span class="kn">import</span> <span class="n">durbin_watson</span>
+<span class="kn">from</span> <span class="nn">statsmodels.stats.stattools</span> <span class="kn">import</span> <span class="n">durbin_watson</span>
 <span class="n">dw</span> <span class="o">=</span> <span class="n">durbin_watson</span><span class="p">(</span><span class="n">results</span><span class="o">.</span><span class="n">resid</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">"Durbin-Watson:"</span><span class="p">,</span> <span class="n">dw</span><span class="p">)</span>
 </pre></div>
@@ -7972,7 +7844,7 @@ strong multicollinearity or other numerical problems.
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>Durbin-Watson: 0.6660986489662213
+<pre>Durbin-Watson: 1.8995382561397893
 </pre>
 </div>
 </div>
@@ -7983,10 +7855,10 @@ strong multicollinearity or other numerical problems.
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [101]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [96]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">statsmodels.stats.diagnostic</span><span class="w"> </span><span class="kn">import</span> <span class="n">acorr_breusch_godfrey</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">statsmodels.stats.diagnostic</span> <span class="kn">import</span> <span class="n">acorr_breusch_godfrey</span>
 <span class="n">bg_test</span> <span class="o">=</span> <span class="n">acorr_breusch_godfrey</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="n">nlags</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>  
 <span class="nb">print</span><span class="p">(</span><span class="s2">"Breusch-Godfrey Test:"</span><span class="p">,</span> <span class="n">bg_test</span><span class="p">)</span>
 </pre></div>
@@ -8001,7 +7873,7 @@ strong multicollinearity or other numerical problems.
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>Breusch-Godfrey Test: (71.34051446403898, 1.1828184018387332e-14, 30.68272587613959, 8.665070095929285e-18)
+<pre>Breusch-Godfrey Test: (6.293259810311774, 0.17829175956465468, 1.434200361901327, 0.22624617041299117)
 </pre>
 </div>
 </div>
@@ -8014,7 +7886,8 @@ strong multicollinearity or other numerical problems.
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<p>Mediante ambos métodos encontramos que existe autocorrelación positiva de los errores. Esto no implica que los coeficientes estén sesgados. Sin embargo, sí que puede hacer que los p-valores y los estadísticos t y F no sean los adeacuados. Por tanto, realizaremos el modelo con errores corregidos para podernos adaptar a la situación de autocorrelación</p>
+<p>De igual manera se realizó tanto el test de Durbin-Watson para mirar autocorrelación de primer orden como el de Breusch-Godfrey que es de carácter más general.</p>
+<p>Tras ninguno de los dos podemos rechazar la hipótesis nula. Es decir no podemos afirmar que exista autocorrelación en los errores.</p>
 </div>
 </div>
 </div>
@@ -8034,7 +7907,7 @@ strong multicollinearity or other numerical problems.
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [102]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [97]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="n">results_hac</span> <span class="o">=</span> <span class="n">results</span><span class="o">.</span><span class="n">get_robustcov_results</span><span class="p">(</span><span class="n">cov_type</span><span class="o">=</span><span class="s1">'HAC'</span><span class="p">,</span> <span class="n">maxlags</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
@@ -8053,43 +7926,43 @@ strong multicollinearity or other numerical problems.
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
 <pre>                            OLS Regression Results                            
 ==============================================================================
-Dep. Variable:            delta_ln_ct   R-squared:                       0.984
-Model:                            OLS   Adj. R-squared:                  0.983
-Method:                 Least Squares   F-statistic:                     420.1
-Date:                Thu, 25 Sep 2025   Prob (F-statistic):           1.84e-88
-Time:                        11:42:17   Log-Likelihood:                 279.85
-No. Observations:                 144   AIC:                            -529.7
-Df Residuals:                     129   BIC:                            -485.1
+Dep. Variable:            delta_ln_ct   R-squared:                       0.861
+Model:                            OLS   Adj. R-squared:                  0.847
+Method:                 Least Squares   F-statistic:                 1.466e+04
+Date:                Mon, 06 Oct 2025   Prob (F-statistic):          2.19e-194
+Time:                        20:44:55   Log-Likelihood:                 598.59
+No. Observations:                 150   AIC:                            -1167.
+Df Residuals:                     135   BIC:                            -1122.
 Df Model:                          14                                         
 Covariance Type:                  HAC                                         
 ==============================================================================
                  coef    std err          t      P&gt;|t|      [0.025      0.975]
 ------------------------------------------------------------------------------
-const          9.0322      0.053    171.201      0.000       8.928       9.137
-y-c           -1.2756      0.436     -2.924      0.004      -2.139      -0.412
-r_t^cp        -0.0026      0.004     -0.602      0.548      -0.011       0.006
-r_t^lp        -0.0750      0.007    -11.140      0.000      -0.088      -0.062
-delta_u_t      0.0563      0.015      3.830      0.000       0.027       0.085
-gap_y^d        0.0002   3.82e-05      4.584      0.000    9.95e-05       0.000
-AL/y         -53.3325     24.791     -2.151      0.033    -102.382      -4.283
-IA/y           0.0001   8.27e-06     15.092      0.000       0.000       0.000
-2020-01-01    -0.0166      0.016     -1.016      0.312      -0.049       0.016
-2020-04-01    -0.6457      0.149     -4.341      0.000      -0.940      -0.351
-2020-07-01     0.3147      0.081      3.891      0.000       0.155       0.475
-2020-10-01     0.1186      0.040      2.996      0.003       0.040       0.197
-2021-01-01     0.0005      0.066      0.008      0.994      -0.130       0.131
-2021-04-01     0.0531      0.037      1.427      0.156      -0.021       0.127
-2021-07-01     0.0148      0.025      0.601      0.549      -0.034       0.063
+const          0.1563      0.089      1.749      0.083      -0.020       0.333
+y-c           -0.0167      0.010     -1.663      0.099      -0.037       0.003
+r_t^cp        -0.0001      0.000     -0.268      0.789      -0.001       0.001
+r_t^lp        -0.0005      0.001     -0.433      0.665      -0.003       0.002
+delta_u_t     -0.0075      0.002     -3.298      0.001      -0.012      -0.003
+gap_y^d      1.06e-05   3.86e-06      2.748      0.007    2.97e-06    1.82e-05
+AL/y          -0.8248      0.429     -1.924      0.056      -1.672       0.023
+IA/y        1.674e-06   1.16e-06      1.448      0.150   -6.12e-07    3.96e-06
+2020-01-01    -0.0215      0.001    -17.898      0.000      -0.024      -0.019
+2020-04-01    -0.0363      0.020     -1.789      0.076      -0.076       0.004
+2020-07-01     0.0493      0.010      5.101      0.000       0.030       0.068
+2020-10-01    -0.0079      0.004     -1.932      0.055      -0.016       0.000
+2021-01-01     0.0048      0.004      1.158      0.249      -0.003       0.013
+2021-04-01     0.0273      0.001     29.338      0.000       0.025       0.029
+2021-07-01    -0.0007      0.002     -0.365      0.715      -0.004       0.003
 ==============================================================================
-Omnibus:                        0.372   Durbin-Watson:                   0.666
-Prob(Omnibus):                  0.830   Jarque-Bera (JB):                0.266
-Skew:                          -0.105   Prob(JB):                        0.875
-Kurtosis:                       3.004   Cond. No.                     3.11e+07
+Omnibus:                       41.985   Durbin-Watson:                   1.900
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):              248.135
+Skew:                          -0.792   Prob(JB):                     1.31e-54
+Kurtosis:                       9.098   Cond. No.                     8.50e+06
 ==============================================================================
 
 Notes:
 [1] Standard Errors are heteroscedasticity and autocorrelation robust (HAC) using 4 lags and without small sample correction
-[2] The condition number is large, 3.11e+07. This might indicate that there are
+[2] The condition number is large, 8.5e+06. This might indicate that there are
 strong multicollinearity or other numerical problems.
 </pre>
 </div>
@@ -8104,30 +7977,249 @@ strong multicollinearity or other numerical problems.
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=5bb5ba94">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-<div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Guardamos los resultados con errores HAC en formato LaTeX</span>
-<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">"resultados_regresion_hac.tex"</span><span class="p">,</span> <span class="s2">"w"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">results_hac</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span><span class="o">.</span><span class="n">as_latex</span><span class="p">())</span>
-</pre></div>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=f82695e2">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=d252dcf0">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="SEE-YOU-SOON">SEE YOU SOON<a class="anchor-link" href="#SEE-YOU-SOON">¶</a></h2>
+<h2 id="MODELO-CON-VARIABLES-SIGNIFICATIVAS">MODELO CON VARIABLES SIGNIFICATIVAS<a class="anchor-link" href="#MODELO-CON-VARIABLES-SIGNIFICATIVAS">¶</a></h2>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=92dcb50b">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [98]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="cm-editor cm-s-jupyter">
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Crear un DataFrame con los coeficientes y los valores p</span>
+<span class="n">params</span> <span class="o">=</span> <span class="n">results</span><span class="o">.</span><span class="n">params</span>
+<span class="n">p_values</span> <span class="o">=</span> <span class="n">results</span><span class="o">.</span><span class="n">pvalues</span>
+
+<span class="c1"># Filtrar los coeficientes significativos (valor p &lt; 0.05)</span>
+<span class="n">significant_params</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="n">p_values</span> <span class="o">&lt;</span> <span class="mf">0.05</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">significant_params</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
+<pre>delta_u_t    -0.007537
+gap_y^d       0.000011
+2020-01-01   -0.021455
+2020-04-01   -0.036253
+2020-07-01    0.049267
+2021-04-01    0.027314
+dtype: float64
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=35759bdc">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [99]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="cm-editor cm-s-jupyter">
+<div class="highlight hl-ipython3"><pre><span></span><span class="n">X</span> <span class="o">=</span> <span class="n">significant_params</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+<span class="n">U</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">'delta_ln_ct'</span><span class="p">]</span>  <span class="c1"># Variable dependiente</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">X</span><span class="p">]</span>  <span class="c1"># Variables independientes</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">add_constant</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">OLS</span><span class="p">(</span><span class="n">U</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">missing</span><span class="o">=</span><span class="s1">'drop'</span><span class="p">)</span>  <span class="c1"># Estimación por OLS</span>
+<span class="n">results</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">cov_type</span><span class="o">=</span><span class="s1">'HAC'</span><span class="p">,</span> <span class="n">cov_kwds</span><span class="o">=</span><span class="p">{</span><span class="s1">'maxlags'</span><span class="p">:</span> <span class="mi">4</span><span class="p">})</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">results</span><span class="o">.</span><span class="n">summary</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
+<pre>                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:            delta_ln_ct   R-squared:                       0.840
+Model:                            OLS   Adj. R-squared:                  0.833
+Method:                 Least Squares   F-statistic:                     111.3
+Date:                Mon, 06 Oct 2025   Prob (F-statistic):           3.13e-37
+Time:                        20:44:55   Log-Likelihood:                 587.81
+No. Observations:                 150   AIC:                            -1162.
+Df Residuals:                     143   BIC:                            -1141.
+Df Model:                           6                                         
+Covariance Type:                  HAC                                         
+==============================================================================
+                 coef    std err          z      P&gt;|z|      [0.025      0.975]
+------------------------------------------------------------------------------
+const          0.0055      0.001      9.208      0.000       0.004       0.007
+delta_u_t     -0.0067      0.002     -2.912      0.004      -0.011      -0.002
+gap_y^d     1.024e-05   1.92e-06      5.337      0.000    6.48e-06     1.4e-05
+2020-01-01    -0.0239      0.001    -25.896      0.000      -0.026      -0.022
+2020-04-01    -0.0480      0.021     -2.324      0.020      -0.088      -0.008
+2020-07-01     0.0486      0.010      5.028      0.000       0.030       0.068
+2021-04-01     0.0260      0.001     40.311      0.000       0.025       0.027
+==============================================================================
+Omnibus:                       46.762   Durbin-Watson:                   1.659
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):              326.351
+Skew:                          -0.857   Prob(JB):                     1.36e-71
+Kurtosis:                      10.020   Cond. No.                     7.29e+03
+==============================================================================
+
+Notes:
+[1] Standard Errors are heteroscedasticity and autocorrelation robust (HAC) using 4 lags and without small sample correction
+[2] The condition number is large, 7.29e+03. This might indicate that there are
+strong multicollinearity or other numerical problems.
+</pre>
+</div>
+</div>
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
+<pre>/Users/miguelfernandez/Desktop/Programación/Universidad/.venv/lib/python3.12/site-packages/statsmodels/base/model.py:1894: ValueWarning: covariance of constraints does not have full rank. The number of constraints is 6, but rank is 3
+  warnings.warn('covariance of constraints does not have full '
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=64abfb38">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<div style="background-color: #ff7e7ef0; padding: 15px; border-radius: 8px;">
+<h2>C1. Discusión e interpretación de la especificación propuesta</h2>
+<p>La especificación empírica propuesta:</p>
+<p>$$
+  \Delta \ln(c_t) = \beta_0 + \beta_1 \left[\ln(y_{t}^d) - \ln(c_{t-1})\right] + \beta_2 r_t^{cp} + \beta_3 r_t^{lp} + \beta_4 \Delta u_t + \beta_5 (\text{gap}_{y}^d)t + \beta_6 \frac{AL_{t-1}}{y_t^d} + \beta_7 \frac{IA_{t-1}}{y_t^d} + \epsilon_t
+  $$</p>
+<p>puede interpretarse como una <strong>forma versión extensiva</strong> derivada de los modelos de <strong>elección intertemporal de consumo y ocio</strong> vistos en clase, cuya formulación básica es:</p>
+<p>$$
+  \ln(c_1) + \gamma \ln(1-n_1) + \beta[\ln(c_2) + \gamma \ln(1-n_2)]
+  $$</p>
+<p>donde el consumidor elige consumo $(c_t)$ y ocio $(1-n_t)$ maximizando utilidad intertemporal sujeta a una restricción presupuestaria que vincula los ingresos presentes y futuros.</p>
+<p>En este marco teórico, la decisión de consumo depende de tres grandes dimensiones:</p>
+<ol>
+<li><strong>Expectativas de renta futura</strong> (ingreso permanente o renta disponible esperada).</li>
+<li><strong>Preferencias por consumo presente vs. futuro</strong>, capturadas por el tipo de interés real y el parámetro de descuento β.</li>
+<li><strong>Condiciones del mercado laboral</strong>, que afectan tanto a la renta como al ocio disponible.</li>
+</ol>
+<hr/>
+<h3 id="Correspondencia-entre-la-teor%C3%ADa-y-la-especificaci%C3%B3n-emp%C3%ADrica">Correspondencia entre la teoría y la especificación empírica<a class="anchor-link" href="#Correspondencia-entre-la-teor%C3%ADa-y-la-especificaci%C3%B3n-emp%C3%ADrica">¶</a></h3><ul>
+<li><p><strong>Término dinámico $[\ln(y_t^d) - \ln(c_{t-1})]$</strong><br/>
+Representa la <strong>brecha entre la renta disponible actual y el consumo pasado</strong>.<br/>
+En los modelos intertemporales, los consumidores suavizan el consumo en el tiempo, ajustándolo lentamente ante cambios en la renta.<br/>
+Por tanto, este término actúa como una <strong>condición de equilibrio de largo plazo</strong>: si la renta permanente aumenta más rápido que el consumo, el término será positivo y la variación del consumo ($\Delta \ln c_t$) tenderá a ser mayor.</p>
+</li>
+<li><p><strong>Términos de tipo de interés $r_t^{cp}$ y $r_t^{lp}$</strong><br/>
+En la teoría consumo-ocio, el tipo de interés real refleja el <strong>precio relativo del consumo presente respecto al futuro</strong>.<br/>
+Un aumento de $r_t$ encarece el consumo actual y, teóricamente, incentiva el ahorro.<br/>
+Su efecto empírico suele ser pequeño o ambiguo, ya que depende de la magnitud relativa de los efectos <strong>sustitución</strong> (consumir menos hoy) y <strong>renta</strong> (mayor ingreso financiero futuro).</p>
+</li>
+<li><p><strong>Variación del desempleo ($\Delta u_t$)</strong><br/>
+Captura el componente del modelo teórico relacionado con el <strong>riesgo de ingresos y disponibilidad de ocio</strong>.<br/>
+Cuando el desempleo aumenta, se reduce la renta esperada y la confianza del consumidor, generando una caída en el consumo presente.<br/>
+En términos del modelo teórico, este efecto se traduce en un desplazamiento de la restricción presupuestaria y un aumento involuntario del “ocio”.</p>
+</li>
+<li><p><strong>Diferencia entre la renta disponible y su media reciente $(\text{gap}_{y}^d)$</strong><br/>
+Este término aproxima la <strong>variación transitoria de la renta respecto a su tendencia</strong>.<br/>
+En los modelos de consumo permanente, los consumidores responden más a los cambios permanentes que a los transitorios.<br/>
+Por tanto, un $\beta_5$ positivo indicaría que los hogares interpretan el “gap” como un cambio más duradero en su ingreso, y ajustan el consumo al alza.</p>
+</li>
+<li><p><strong>Activos líquidos e ilíquidos $(AL_{t-1}/y_t^d,\ IA_{t-1}/y_t^d)$</strong><br/>
+Estos términos introducen una dimensión de <strong>restricciones de liquidez</strong> que la teoría básica no incluye explícitamente, pero que son fundamentales empíricamente.<br/>
+Si los hogares enfrentan limitaciones de crédito, la disponibilidad de activos líquidos (M3 ajustado por IPC) condiciona su capacidad de suavizar el consumo ante shocks de renta.</p>
+</li>
+<li><p><strong>Dummies del Covid-19</strong><br/>
+Actúan como <strong>shocks exógenos de corto plazo</strong> que alteran simultáneamente la renta, la capacidad de gasto y las expectativas.<br/>
+Desde el punto de vista teórico, representan desplazamientos temporales de la restricción presupuestaria y cambios abruptos en la utilidad derivada del ocio (por confinamientos o cambios en el tiempo de trabajo).</p>
+</li>
+</ul>
+<hr/>
+<h3 id="Interpretaci%C3%B3n-global">Interpretación global<a class="anchor-link" href="#Interpretaci%C3%B3n-global">¶</a></h3><p>El modelo empírico combina los fundamentos microeconómicos del modelo de <strong>consumo-ocio intertemporal</strong> con extensiones macroeconómicas y financieras:</p>
+<ul>
+<li>La <strong>presencia de un término de corrección dinámica</strong> aproxima la idea de que los consumidores ajustan gradualmente el consumo hacia un nivel consistente con la renta permanente.</li>
+<li>Los <strong>tipos de interés reales</strong> recogen la intertemporalidad de la decisión: consumir hoy o ahorrar para el futuro.</li>
+<li>Las <strong>variables laborales y financieras</strong> introducen la incertidumbre y las restricciones de liquidez reales que limitan el modelo puramente teórico.</li>
+<li>Finalmente, las <strong>dummies de la pandemia</strong> permiten capturar perturbaciones excepcionales no explicadas por los fundamentos económicos.</li>
+</ul>
+<hr/>
+<p>En síntesis, la especificación propuesta puede entenderse como una <strong>versión empírica ampliada del modelo de elección intertemporal de consumo-ocio</strong>, en la que se reconoce que las decisiones de los hogares no solo dependen de preferencias y precios relativos entre consumo presente y futuro, sino también de factores de incertidumbre, liquidez y shocks macroeconómicos de corto plazo.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=628e39ce">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<div style="background-color: #ffc0a8f0; padding: 15px; border-radius: 8px;">
+<h2>C2. Análisis del Modelo de Demanda de Consumo en EE.UU.</h2>
+<h2 id="Resumen-del-Modelo">Resumen del Modelo<a class="anchor-link" href="#Resumen-del-Modelo">¶</a></h2><p>El modelo propuesto para estimar la función de consumo privado en EE.UU. considera diversas variables macroeconómicas clave que afectan al consumo. Se incluyeron variables como la renta disponible, los tipos de interés, el desempleo, la diferencia entre la renta disponible y su media, y la medida de activos líquidos e ilíquidos, además de variables dummy para capturar el impacto del Covid-19. La regresión se ajustó mediante Mínimos Cuadrados Ordinarios (OLS), con un total de 150 observaciones y un período de análisis que abarca de 1987_T4 a 2019_T4, con un enfoque adicional en los efectos de la pandemia de Covid-19 entre 2020_T1 y 2021_T2.</p>
+<h3 id="Resultados-del-Modelo-Completo">Resultados del Modelo Completo<a class="anchor-link" href="#Resultados-del-Modelo-Completo">¶</a></h3><p>Los resultados iniciales del modelo proporcionan una visión global del ajuste y la significancia de las variables:</p>
+<ul>
+<li><p><strong>R-cuadrado</strong>: El valor de 0.861 indica que el modelo explica el 86.1% de la variabilidad en la variable dependiente, la variación del consumo privado en logaritmos. Este es un valor relativamente alto, lo que sugiere que el modelo tiene un buen poder explicativo. Es usual en modelo macroeconómicos tener estas cifras.</p>
+</li>
+<li><p><strong>Significancia de los coeficientes</strong>: Se observan varias variables no significativas (como los tipos de interés real de corto y largo plazo, y los activos ilíquidos), lo que indica que estos factores no tienen un efecto relevante en la explicación de las fluctuaciones en el consumo.</p>
+</li>
+<li><p><strong>Variables con significancia</strong>:</p>
+<ul>
+<li><strong>Variación en la tasa de desempleo $(Δu_t)$</strong>: La variable es estadísticamente significativa con un valor p de 0.001, lo que sugiere que las fluctuaciones en el desempleo tienen un impacto importante en el consumo privado.</li>
+<li><strong>Gap de renta disponible $(gap_y^d)$</strong>: El coeficiente es significativo a un nivel del 1% (p=0.007), lo que indica que las diferencias en la renta disponible respecto al promedio de los últimos 4 trimestres tienen un efecto sobre el consumo.</li>
+<li><strong>Dummies del Covid-19</strong>: Las variables dummy correspondientes a los trimestres de $2020$ y $2021$ son altamente significativas y muestran un efecto importante en el consumo. El impacto negativo en $2020$, seguido de una recuperación a mitad de $2021$, es un reflejo de los efectos económicos de la pandemia.</li>
+</ul>
+</li>
+</ul>
+<hr/>
+<h3 id="Resultados-del-Modelo-Reducido-(Eliminando-Variables-No-Significativas)">Resultados del Modelo Reducido (Eliminando Variables No Significativas)<a class="anchor-link" href="#Resultados-del-Modelo-Reducido-(Eliminando-Variables-No-Significativas)">¶</a></h3><p>En el análisis posterior, se eliminaron las variables no significativas del modelo, lo que resulta en un modelo reducido con 6 variables significativas. Los resultados son los siguientes:</p>
+<ul>
+<li><p><strong>R-cuadrado</strong>: El valor ajustado de $0.833$ y un R-cuadrado de $0.840$ indican que, aunque el modelo es un poco menos explicativo que el modelo completo, sigue siendo robusto para capturar la dinámica del consumo en EE.UU. en el largo plazo.</p>
+</li>
+<li><p><strong>Coeficientes significativos</strong>: Las variables <strong>$Δu_t$</strong>, <strong>$gap_y^d$</strong>, y las <strong>dummies del Covid-19</strong> siguen siendo significativas en este modelo reducido, con <strong>$Δu_t$</strong> teniendo un impacto negativo en el consumo y <strong>$gap_y^d$</strong> mostrando una relación positiva. Además, las dummies de la pandemia continúan reflejando un impacto significativo.</p>
+<ul>
+<li><strong>Dummys de Covid-19</strong>: Los coeficientes de las dummies continúan siendo altamente significativos, especialmente para los trimestres de $2020$ y $2021$. El efecto negativo en el primer trimestre de $2020$ ($-0.0239$) y en abril de $2020$ ($-0.0480$) refleja la caída del consumo durante los picos iniciales de la pandemia. Sin embargo, a partir del tercer trimestre de $2020$, se observa una recuperación en el consumo ($+0.0486 $en julio de $2020$), lo que podría reflejar los intentos de reactivación económica.</li>
+</ul>
+</li>
+</ul>
+<hr/>
+<h3 id="Discusi%C3%B3n-de-los-Resultados">Discusión de los Resultados<a class="anchor-link" href="#Discusi%C3%B3n-de-los-Resultados">¶</a></h3><ol>
+<li><p><strong>Efecto de la renta disponible</strong>: El <strong>$gap_y^d$</strong> muestra un efecto positivo en el consumo, lo que confirma la teoría económica básica de que los hogares aumentan su consumo cuando la renta disponible está por encima de su tendencia reciente. Este efecto es consistente con los modelos de consumo intertemporal, donde los hogares ajustan su gasto en función de cambios en su renta disponible.</p>
+</li>
+<li><p><strong>Impacto de la tasa de desempleo</strong>: La variable <strong>$Δu_t$</strong> tiene un coeficiente negativo significativo, lo que sugiere que un aumento en la tasa de desempleo reduce el consumo privado. Esto es consistente con la teoría económica, que indica que un aumento en el desempleo genera incertidumbre y reduce la confianza de los consumidores, afectando negativamente su disposición a gastar.</p>
+</li>
+<li><p><strong>Efectos de la pandemia (Covid-19)</strong>: Las dummies de Covid-19 proporcionan una clara indicación del impacto económico de la pandemia. Los resultados indican una fuerte caída en el consumo al principio de la crisis, con una posterior recuperación en los trimestres siguientes. Este hallazgo es relevante para comprender el impacto transitorio de eventos extraordinarios, como la pandemia, en las decisiones de consumo de los hogares.</p>
+</li>
+</ol>
+<hr/>
+<h3 id="Consideraciones">Consideraciones<a class="anchor-link" href="#Consideraciones">¶</a></h3><ul>
+<li><p><strong>Persistencia del consumo</strong>: Aunque el modelo original incluía el consumo del período anterior ($c_{t-1}$), que es una variable relevante para capturar la persistencia del consumo, esta variable no mostró significancia en el modelo completo ni en el reducido. Esto podría sugerir que el consumo no es completamente dependiente del consumo pasado en este caso, o que otras variables macroeconómicas juegan un rol más destacado en la explicación de las fluctuaciones en el consumo.</p>
+</li>
+<li><p><strong>Tipos de interés</strong>: A pesar de la teoría económica que sugiere que los tipos de interés pueden influir en el consumo a través del coste del crédito, los resultados muestran que los tipos de interés real de corto y largo plazo no son significativos. Esto podría ser indicativo de que otros factores, como la renta disponible y la variabilidad del desempleo, son más relevantes para explicar las decisiones de consumo en el contexto estadounidense.</p>
+</li>
+</ul>
+</div>
 </div>
 </div>
 </div>
