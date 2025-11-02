@@ -6,4 +6,4 @@ HTML(string="<h1>Hola</h1>").write_pdf(
 )
 
 # O desde archivo y con base_url para resolver rutas relativas a CSS/img:
-HTML(filename="/Users/miguelfernandez/Desktop/git_ucm_clone/ucm/Macro_Avanzada/prueba1_ej3.ipynb", base_url=".").write_pdf("salida.pdf")
+HTML(filename="/Users/miguelfernandez/Desktop/git_ucm_clone/ucm/Macro_Avanzada/Práctica_2/P2_EJ4_MAv.ipynb", base_url=".").write_pdf("2_EJ4_MAv.pdf")
