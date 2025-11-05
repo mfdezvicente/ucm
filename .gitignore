@@ -1,1 +1,60 @@
+# ========================
+# 🧠 BASE GITIGNORE PYTHON + JUPYTER + VS CODE
+# ========================
+
+# 🧱 Entornos virtuales
+venv/
+venv_*/
+.env
+*.env
+
+# 💾 Archivos temporales / cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.log
+
+# 📓 Notebooks temporales
+.ipynb_checkpoints/
+*.nbconvert.ipynb
+
+# 📊 Datos locales
+data/
+datasets/
+*.csv
+*.xlsx
+*.xls
+*.sav
+*.parquet
+*.h5
+*.pkl
+
+# 🧩 Salidas / modelos / informes
+outputs/
+models/
+reports/
+*.pdf
+*.png
+*.jpg
+
+# 🧰 Configuración local
 .DS_Store
+.vscode/
+.idea/
+
+# 🔧 Archivos de sistema (Windows / Mac)
+Thumbs.db
+ehthumbs.db
+desktop.ini
+$RECYCLE.BIN/
+
+# 🧪 Jupyter / kernel metadata
+.ipynb_checkpoints
+*.ipynb_checkpoints
+*.ipynb_meta.json
+
+# 🔒 Credenciales o configuraciones personales
+secrets.*
+config_local.*
+credentials.json
+token.json
