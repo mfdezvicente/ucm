@@ -20,4 +20,6 @@ mjack = function(x, estadistico){
 }
 
 mjack(x, mean)
+# TERMINAMOS EL EJERCICIO
+
 
