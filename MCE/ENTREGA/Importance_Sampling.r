@@ -128,3 +128,62 @@ g <- ggplot(df_plot, aes(x = S_T, fill = Metodo, color = Metodo)) +
 print(g)
 
 
+# --- 5. RADIOGRAFÍA DE LA VARIANZA (Visualización de Payoffs) ---
+
+library(ggplot2)
+library(gridExtra)
+
+# A) PREPARACIÓN DE LOS DATOS (Las "tripas" del promedio)
+# Calculamos EXACTAMENTE qué número suma cada simulación al promedio final
+# Nota: Incluimos el descuento exp(-rT) y el peso W en el caso de IS
+
+# Vector 1: Contribuciones del MC Estándar
+contrib_crudo <- pmax(ST_crudo - K, 0) * exp(-r*T)
+
+# Vector 2: Contribuciones del Importance Sampling
+contrib_is <- pmax(ST_is - K, 0) * weights * exp(-r*T)
+
+# B) GRÁFICO 1: "El Código de Barras" (Primeras 200 simulaciones)
+# Este gráfico muestra CÓMO se ve la lista de números que estás promediando
+# Tomamos solo las primeras 200 para que se vea bien
+N_muestra <- 200
+df_muestra <- data.frame(
+  Simulacion = rep(1:N_muestra, 2),
+  Valor = c(contrib_crudo[1:N_muestra], contrib_is[1:N_muestra]),
+  Metodo = rep(c("Standard MC", "Importance Sampling"), each = N_muestra)
+)
+
+g1 <- ggplot(df_muestra, aes(x = Simulacion, y = Valor, color = Metodo)) +
+  geom_point(alpha = 0.8, size = 2) +
+  geom_hline(yintercept = precio_bs, linetype = "dashed", color = "black") +
+  annotate("text", x = 0, y = precio_bs + 5, label = "Precio Real", hjust = 0, size = 3) +
+  facet_wrap(~Metodo, ncol = 1, scales = "free_y") +
+  theme_bw() +
+  labs(title = "Comparativa de Muestras Individuales (Primeros 200 casos)",
+       subtitle = "Fíjate en la escala del Eje Y: El Estándar tiene ceros y picos gigantes",
+       y = "Contribución al Precio (Payoff Descontado * Peso)") +
+  theme(legend.position = "none")
+
+# C) GRÁFICO 2: Histograma de los Valores (¿Qué tan estables son?)
+# Filtramos los ceros del Standard MC para que no rompan el gráfico, 
+# solo para ver la magnitud de los pagos positivos.
+
+df_hist <- data.frame(
+  Valor = c(contrib_crudo, contrib_is),
+  Metodo = rep(c("Standard MC", "Importance Sampling"), each = M_paths)
+)
+
+# Zoom en la zona relevante (quitamos los 0 masivos del standard para ver algo)
+g2 <- ggplot(df_hist[df_hist$Valor > 0.01 & df_hist$Valor < 50, ], 
+             aes(x = Valor, fill = Metodo)) +
+  geom_histogram(position = "identity", alpha = 0.6, bins = 100) +
+  geom_vline(xintercept = precio_bs, linetype="dashed") +
+  scale_fill_manual(values = c("Importance Sampling"="#004c99", "Standard MC"="#999999")) +
+  theme_minimal() +
+  labs(title = "Distribución de los Valores que forman el Promedio",
+       subtitle = "IS (Azul) se agrupa en torno al precio real. Std (Gris) está muy disperso.",
+       x = "Valor de la contribución individual",
+       y = "Frecuencia")
+
+# Mostrar ambos
+grid.arrange(g1, g2, nrow = 2)
