@@ -7,7 +7,7 @@ sigma <- 0.11
 # Parámetros para la simulación de trayectorias
 
 set.seed (1)
-M_paths <- 1000000
+M_paths <- 100
 N_steps <- 15
 dt = T / N_steps
 
