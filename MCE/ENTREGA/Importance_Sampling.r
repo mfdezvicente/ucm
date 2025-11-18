@@ -1,6 +1,6 @@
-# --- PARÁMETROS INICIALES (Coherentes con Tarea 1) ---
+# --- PARÁMETROS INICIALES ---
 S0 <- 800
-K <- 1200  # Nota: Prueba a cambiar K a 1200 para ver la magia del IS
+K <- 1200  
 T <- 5
 r <- 0.02
 sigma <- 0.11
@@ -71,7 +71,7 @@ cat("Error Estándar (Crudo):", round(error_std_crudo, 5), "\n")
 cat("Error Estándar (IS):   ", round(error_std_is, 5), "\n")
 
 
-# --- 4. VISUALIZACIÓN PROFESIONAL CON GGPLOT2 ---
+# --- 4. VISUALIZACIÓN  ---
 
 library(ggplot2)
 
@@ -86,7 +86,7 @@ df_plot <- data.frame(
 x_min <- K * 0.5
 x_max <- K * 1.5
 
-# 3. Generación del Gráfico
+
 g <- ggplot(df_plot, aes(x = S_T, fill = Metodo, color = Metodo)) +
   
   # Geometría de Densidad (con transparencia alpha para ver el solapamiento)
@@ -115,7 +115,7 @@ g <- ggplot(df_plot, aes(x = S_T, fill = Metodo, color = Metodo)) +
     caption = paste("Simulaciones:", format(M_paths, big.mark=","), "| Tarea 4")
   ) +
   
-  # Tema limpio (minimalista, ideal para documentos académicos)
+  # Tema limpio 
   theme_minimal() +
   theme(
     legend.position = "top",
@@ -128,9 +128,8 @@ g <- ggplot(df_plot, aes(x = S_T, fill = Metodo, color = Metodo)) +
 print(g)
 
 
-# --- 5. RADIOGRAFÍA DE LA VARIANZA (Visualización de Payoffs) ---
+# --- 5. VARIANZA (Visualización de Payoffs) ---
 
-library(ggplot2)
 library(gridExtra)
 
 # A) PREPARACIÓN DE LOS DATOS (Las "tripas" del promedio)
@@ -144,8 +143,7 @@ contrib_crudo <- pmax(ST_crudo - K, 0) * exp(-r*T)
 contrib_is <- pmax(ST_is - K, 0) * weights * exp(-r*T)
 
 # B) GRÁFICO 1: "El Código de Barras" (Primeras 200 simulaciones)
-# Este gráfico muestra CÓMO se ve la lista de números que estás promediando
-# Tomamos solo las primeras 200 para que se vea bien
+
 N_muestra <- 200
 df_muestra <- data.frame(
   Simulacion = rep(1:N_muestra, 2),
@@ -164,10 +162,7 @@ g1 <- ggplot(df_muestra, aes(x = Simulacion, y = Valor, color = Metodo)) +
        y = "Contribución al Precio (Payoff Descontado * Peso)") +
   theme(legend.position = "none")
 
-# C) GRÁFICO 2: Histograma de los Valores (¿Qué tan estables son?)
-# Filtramos los ceros del Standard MC para que no rompan el gráfico, 
-# solo para ver la magnitud de los pagos positivos.
-
+.
 df_hist <- data.frame(
   Valor = c(contrib_crudo, contrib_is),
   Metodo = rep(c("Standard MC", "Importance Sampling"), each = M_paths)
