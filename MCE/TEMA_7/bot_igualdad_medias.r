@@ -29,4 +29,18 @@ for (b in 1:B){
 hist (T, main="Distribución nula del estadístico", xlab="T")
 # CALCULO EL P-VALOR
 pvalor = mean(abs(T) >= abs(tobs))
-pvalor
+alpha = 0.05
+q = quantile (T, probs=c(alpha/2, 1-alpha/2))
+abline (v=q, col="blue", lty=2)
+
+
+
+
+hist(T, main="Distribución nula del estadístico", xlab="T")
+points (tobs, 0, col="red", pch=19, cex=2)
+mean(abs(T) >= abs(tobs))
+alpha = 0.05
+q = quantile (T, probs=c(alpha/2, 1-alpha/2))
+abline (v=q[1], col="blue", lty=2)
+abline (v=q[2], col="blue", lty=2)
+# FIN DEL EJE
