@@ -3,6 +3,9 @@
 # a la serie que mide las matriculaciones mensuales de turismo en España  #
 ###########################################################################
 
+
+
+
 # Se limpia el espacio de trabajo:
 
 rm(list = ls())
@@ -75,6 +78,7 @@ datos.train.ts <- as.ts(datos.train$log_target, frequency = 12)
 datos.test.ts <- as.ts(datos.test$log_target, frequency=12)
 
 # [3.2] ¿Es estacionaria en media? (¿Hay que diferenciarla?)
+# El profe prefiere ajustar y si el parámetro se le v a uno luego diferencia.
 
 # Test de Dickey-Fuller
 
@@ -89,7 +93,7 @@ adf_all_tests <- function(y, max_lags = "AIC") {
   
   # Lista para guardar los p-valores
   p_values <- numeric(3)
-  
+  # TEST DE RAÍCES UNITARIAS ES POCO POTENTE
   for (i in 1:3) {
     # Ejecutar el test ADF con el tipo correspondiente
     test <- ur.df(y, type = types[i], selectlags = max_lags)
@@ -228,7 +232,7 @@ Box.test.2(residuals(ajuste3),
            type="Ljung-Box")
 
 # Se propone un SARIMA(1,0,1)x(1,0,1)12 + MU
-if (FALSE){
+
 ajuste4 <- Arima(datos.train.ts,
                  order = c(1,0,1),
                  seasonal = list(order = c(1,0,1), period = 12))
@@ -260,7 +264,8 @@ Box.test.2(residuals(ajuste4),
            type="Ljung-Box")
 
 # Se propone un SARIMA(1,0,1)x(0,1,1)12 + MU
-}
+# Esto es porque he visto que el sar se hacerca mucho al 1
+
 ajuste5 <- Arima(datos.train.ts,
                  order = c(1,0,1),
                  seasonal = list(order = c(0,1,1), period = 12))
@@ -289,6 +294,11 @@ ajuste6 <- Arima(datos.train.ts,
                  seasonal = list(order = c(0,1,1), period = 12))
 
 coeftest(ajuste6)
+
+ajuste_def <- auto.arima(datos.train.ts,
+                     seasonal = TRUE)  # detecta solo si hay estacionalidad
+ajuste
+
 
 # Peligro de no invertibilidad 
 # Cambiemos el método de estimación 
@@ -445,10 +455,10 @@ simulaPredicciones_Horizonte1 = function(data){
   return(list(reales= vector_real,
               predicciones = vector_prediccion,
               error_mape = vector_mape))  
-}
+
 
 errores_a_horizonte1_a_futuro<-simulaPredicciones_Horizonte1(datosLog)
-
+}
 mean(errores_a_horizonte1_a_futuro$error_mape)
 
 # MAPE out-of-sampling(h=1):5.173219 Este valor sí es comparable a 7.035763
