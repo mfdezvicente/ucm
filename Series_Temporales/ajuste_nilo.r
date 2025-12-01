@@ -11,8 +11,8 @@
 rm(list = ls())
 
 # Se asigna el directorio donde están los datos
-
-datos <- read.csv("C:/Users/daniel/Nube/GoogleDriveUniversidad/universidad/20252026/SSTT/data/nilo.csv")
+setwd("/Users/miguelfernandez/GitHub/ucm/Series_Temporales/")
+datos <- read.csv("nilo.csv")
 
 # Carga de datos
 
@@ -56,7 +56,7 @@ ggplotly(graficoSerie)
 # Se evalúa la necesidad de transformar la serie para hacerla
 # estacionaria en varianza
 
-install.packages("MASS")
+#install.packages("MASS")
 library(MASS)
 
 box_cox <- boxcox(NIVEL_NILO ~ ANYO,
