@@ -1,0 +1,88 @@
+```latex
+\begin{exercise}
+Considere un país de la Unión Monetaria cuya inflación es del $3\%$, la tasa de crecimiento de la cantidad de dinero en circulación es del $6\%$, y el tipo de interés nominal es del $5\%$, todo ello en términos anuales. La autoridad fiscal no puede apelar al banco central para financiar su déficit, y la demanda de dinero no responde a cambios en el tipo de interés nominal.
+
+Suponga que:
+\begin{itemize}
+    \item[(i)] el porcentaje que el déficit primario representa sobre el PIB es del $1{,}04\%$,
+    \item[(ii)] el porcentaje de deuda sobre PIB inicial es del $80\%$.
+\end{itemize}
+
+\begin{enumerate}[label=\Alph*)]
+    \item ¿Es la deuda actual sostenible? Justifique su respuesta. En caso de que su respuesta sea negativa, ¿qué política fiscal debe poner en práctica la autoridad fiscal para que la deuda actual sea sostenible?
+    
+    \item Con los datos del enunciado, ¿es posible amortizar completamente la deuda actual en algún momento del tiempo? Justifique su respuesta.
+    
+    \item Si las directrices comunitarias obligan a que el nivel de endeudamiento sobre PIB sea del $60\%$ para todas las economías de la Unión Monetaria, ¿cuál debe ser el nivel de déficit primario sobre PIB que debe mantener esta economía para alcanzar dicho objetivo de endeudamiento en $4$ años?
+\end{enumerate}
+\end{exercise}
+
+\begin{solution}
+\textbf{Paso previo (crecimiento del PIB nominal).}
+Si la demanda de dinero no depende del tipo de interés nominal, una aproximación natural es asumir velocidad aproximadamente constante (en el corto/medio plazo), de modo que por teoría cuantitativa:
+\[
+\mu \equiv \Delta \ln M \approx \pi + g,
+\]
+donde $\mu$ es el crecimiento del dinero, $\pi$ la inflación y $g$ el crecimiento del PIB real. Con $\mu=6\%$ y $\pi=3\%$,
+\[
+g \approx 3\%.
+\]
+Por tanto, el crecimiento del PIB \emph{nominal} es
+\[
+g_n \approx \pi + g = 3\%+3\% = 6\%.
+\]
+
+\medskip
+Denote $b_t$ la deuda/PIB al inicio de $t$ y $d_t$ el \emph{déficit primario}/PIB (positivo si hay déficit). La dinámica estándar de la deuda/PIB es:
+\[
+b_{t+1}=\frac{1+i}{1+g_n}\,b_t+d_t,
+\]
+con $i=5\%$ y $g_n\simeq 6\%$. Definimos
+\[
+a \equiv \frac{1+i}{1+g_n}=\frac{1.05}{1.06}\approx 0.990566<1.
+\]
+
+\begin{enumerate}[label=\Alph*)]
+\item \textbf{Sostenibilidad.}
+Como $a<1$, la deuda/PIB \emph{no explota} incluso con un déficit primario constante: la ratio converge a un nivel finito.
+Con $d=0.0104$ y $b_0=0.8$,
+\[
+b_{t+1}=a\,b_t+d.
+\]
+El estado estacionario (si $d$ es constante) satisface $b^\ast=a b^\ast+d$, es decir:
+\[
+b^\ast=\frac{d}{1-a}
+= \frac{0.0104}{1-0.990566}
+\approx \frac{0.0104}{0.009434}
+\approx 1.10,
+\]
+esto es, alrededor de $110\%$ del PIB. Dado que $b_0=80\%<b^\ast$, la deuda/PIB tendería a \emph{subir} hacia ese valor, pero de forma acotada. Por tanto, en este sentido, la deuda es \textbf{sostenible} (no diverge).
+
+Si se quisiera \emph{estabilizar} la deuda en el $80\%$ (es decir, $b_{t+1}=b_t=b_0$), el déficit primario compatible sería:
+\[
+d^{\text{stab}}=(1-a)\,b_0 = (1-0.990566)\cdot 0.8 \approx 0.00755,
+\]
+es decir, un déficit primario de aproximadamente $0.755\%$ del PIB. Como el déficit actual es $1.04\%$, habría que reducirlo en torno a $0.285$ puntos de PIB para mantener la deuda estable en $80\%$.
+
+\item \textbf{¿Puede amortizarse completamente la deuda con estos datos?}
+Con $a<1$ pero $d=0.0104>0$ constante, la dinámica converge a $b^\ast>0$ y \emph{no} a cero. Por tanto, \textbf{con un déficit primario positivo permanente no es posible amortizar completamente la deuda}. Para lograr $b_t\to 0$ sería necesario (durante suficiente tiempo) un \textbf{superávit primario} (esto es, $d_t<0$).
+
+\item \textbf{Objetivo $b_4=60\%$ en 4 años.}
+Suponiendo un déficit primario constante $d$ durante 4 años:
+\[
+b_4=a^4 b_0 + d\sum_{j=0}^{3} a^j
+= a^4 b_0 + d\,\frac{1-a^4}{1-a}.
+\]
+Despejando:
+\[
+d=\Bigl(b_4-a^4 b_0\Bigr)\frac{1-a}{1-a^4}.
+\]
+Con $a=\frac{1.05}{1.06}\approx 0.990566$, $a^4\approx 0.962795$, $b_0=0.8$ y $b_4=0.6$:
+\[
+d \approx \Bigl(0.6-0.962795\cdot 0.8\Bigr)\frac{1-0.990566}{1-0.962795}
+\approx -0.0432.
+\]
+Esto equivale a un \textbf{superávit primario} de aproximadamente $4.32\%$ del PIB (déficit primario $-4.32\%$) durante 4 años para alcanzar una deuda/PIB del $60\%$.
+\end{enumerate}
+\end{solution}
+```
