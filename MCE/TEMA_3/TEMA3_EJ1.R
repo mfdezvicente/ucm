@@ -46,5 +46,3 @@ length(V)
 hist(V, col = "skyblue", main = "Función de densidad de la media de la V", freq=FALSE)
 curve(dnorm(x, mean(V), sd(V)), add=TRUE, col="red")
 ks.test(V,pnorm, mean(V), sd(V))
-
-
