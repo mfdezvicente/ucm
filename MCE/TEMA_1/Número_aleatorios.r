@@ -19,10 +19,10 @@ v[1] = (a*x0 + c) %% m # Primer valor depende de la semilla
 for (i in 2:n){
   v[i] = (a*v[i-1] + c) %% m
 }
-#print(v)
+print(v)
 
 u = v/m # Normalizamos los valores entre 0 y 1
-#print(u)
+print(u)
 
 # ----------------------PARTE 2--------------------------------#
 #----------------------#---------------------------------------#
