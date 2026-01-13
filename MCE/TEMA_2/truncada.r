@@ -34,7 +34,3 @@ plot(ecdf(muestrat), main = "Función de distribución acumulada empírica vs Te
 curve(Fdistribuciont, add=TRUE, col="red", lwd=2)
 
 print(ks.test(muestrat, Fdistribuciont)) # ptriang es la función de distribución acumulada de la triangular
-
-
-
-

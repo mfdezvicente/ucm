@@ -32,4 +32,3 @@ mediat[b]=mean(datosb,trim=0.25)
 sesgoB[i]=mean(mediat)-mean(datos)
 }
 sesgoB
-

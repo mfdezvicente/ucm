@@ -1,5 +1,5 @@
-setwd("C:/Users/usu410/Documents")
-datos <- read.table("examen_test.txt")
+
+datos <- read.table("scoredata.txt")
 head(datos)
 
 
@@ -68,5 +68,3 @@ for (b in 1:B){
 }
 hist(theta_hatb)
 sd(theta_hatb)
-
-
