@@ -20,7 +20,7 @@ B = 100
 
 T = numeric(B)
 for (b in 1:B){
-    xb = sample(nuevox, replace = true)
+    xb = sample(nuevox, replace = TRUE)
     yb = sample(nuevoy, replace=TRUE)
     T[b] = var(xb) - var(yb)
 }

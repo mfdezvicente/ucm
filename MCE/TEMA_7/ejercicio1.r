@@ -23,7 +23,7 @@ hist (T, main="Distribución nula del estadístico", xlab="T")
 # H1 : MUY DISTINTA DE 129
 mean(abs(T) >= abs(tobs))
 
-points( tobs, 0, col="red", pch=19, cex=2)
+points(tobs, 0, col="red", pch=19, cex=2)
 
 # b)
 
@@ -42,7 +42,6 @@ for (b in 1:B){
   T[b] = mean(bootsample) - 129
 }
 hist (T, main="Distribución nula del estadístico", xlab="T")
-points( tobs, 0, col="red", pch=19, cex=2)
+points(tobs, 0, col="red", pch=19, cex=2)
 # H1: MUY DISTINTA DE 129
 mean(abs(T) >= abs(tobs))
-
