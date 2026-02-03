@@ -51,3 +51,24 @@ library(tseries)
 jarque.bera.test(residuals(modelo_mco))
 # X-squared = 1.1023, df = 2, p-value = 0.5763
 # El p-valor es 0.5763 > 0.05, por tanto no rechazamos la H0 y concluimos que los residuos siguen una distribución normal.
+#Hacemos la predicción que fue pedida en clase.
+# Para ello vamos a suponer que tenemos unos datos de los que conozco las lluvias de invierno. 
+
+nuevos_datos <- data.frame(
+  lluvinv = c(605,600),
+  tempmed  = c(16.5,17),
+  lluvcos = c(135, 134),
+  edad = c(20,22)
+)
+
+# Para la preducción podemos hacerlo mediante la predicción puntual 
+
+predi <- predict(modelo, newdata = nuevos_datos)
+predi
+# Pero esto no es verdaderamente el valor de la rentabilidad, ya que está en el logaritmo. Por eso lo ponemos en el formato que debería de tener la rentabilidad
+exp(predi)
+# Si quremos una preducción por intervalos, lo que deveríamos de haver es lo siguiente. 
+interv <- predi <- predict(modelo, newdata = nuevos_datos , interval = "confidence", level = 0.95)
+interv
+# En el formato de la exponencial que son los valores correctos. 
+exp(interv)
