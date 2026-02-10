@@ -1,47 +1,71 @@
 ##############################################################
-############      PRÁCTICA 1 - ECONOMETRÍA   #################
+############      EJERCICIO 1 - ECONOMETRÍA   #################
 ############      MIGUEL FERNÁNDEZ VICENTE   #################
 ##############################################################
 
 
-#ENUNCIUADO: 
-#Se ha recopilado información sobre la situación salarial de 40 empleados del sector bancario, recogida en las variables Salario (Y, en euros mensuales) y Experiencia laboral (X, en años de experiencia). Estimar un modelo que explique el nivel salarial en función de la experiencia.
+# Enunciado:
+# Se ha recopilado información salarial de 40 empleados del sector bancario:
+# - Salario (Y, euros mensuales)
+# - Experiencia laboral (X, años)
+# Estimar un modelo que explique el salario en función de la experiencia.
 
-#
-# 1) OBJETIVO: Queremos saber cuál es la relación que se establece entre el salario y los años de experiencia en el sector bancario. 
-# 2) VARIABLES: Cuantitativas y Cualitativas
-# 3) TAMAÑO MUESTRAL
-# 4) MÉTODO DE ESTIMACION: Mínimos Cuadrados o otro modelo. 
-
-
-# FASES 
-# 1) ESPECIFICACIÓN
-# 2) ESTIMACIÓN 
-# 3) VALIDACIÓN 
-# 4) PREDICCIÓN
+# ------------------------------------------------------------
+# 1) Preparación
+# ------------------------------------------------------------
 rm(list = ls())
-#install.packages("readxl")
+
 library(readxl)
-
-df <- read_excel("/Users/miguelfernandez/GitHub/ucm/Econometría_Aplicada/Pr1_Datos.xlsx")      
-df
-# Calculamos la Regresión Lineal mediante lm
-regresion = lm(y ~ x, data = df)
-summary(regresion) # Esto sirve para extraer el resultado
-
-#Estimaciones por el método de los mínimos cuadrados. 
-coeficientes = coef(regresion)
-coeficientes[1] #Intercepto. Sería el salario que recbiríamos si tuvieramos 0 años de experiencia. 
-coeficientes[2] #Pendiente. Con esto podemos ver que por cada unidad de experiencia, el salario aumentaría en 116.86
-
-# Vamos a ver un contraste de hipótesis de los residuos de J-B. El H0 es la normalidad. Por tanto, si el p-valor es menor que 0.05 rechazamos la H0 y concluimos que no hay normalidad en los residuos. 
-
-#install.packages("tseries")
 library(tseries)
-jarque.bera.test(residuals(regresion))
 
-# El p-valor es muy pequeño 1.58e-05 por tanto concluimos que no hay normalidad de los residuos. 
+# Carga de datos
+df <- read_excel("/Users/miguelfernandez/GitHub/ucm/Econometría_Aplicada/Pr1_Datos.xlsx")
 
-# Dibujamos una nube de puntos 
-plot(df$x, df$y, main = "NUBE DE PUNTOS", xlab= "Años", ylab = "Salario", col = "red")
-abline(regresion, col = "blue")
+# Echa un vistazo rápido a las variables
+# head(df)
+# str(df)
+
+# IMPORTANTE:
+# En lm estabas usando y y x. Esto solo funciona si el Excel tiene columnas llamadas exactamente "y" y "x".
+# Si en el archivo se llaman "Salario" y "Experiencia", habría que cambiarlo a:
+# lm(Salario ~ Experiencia, data = df)
+
+# ------------------------------------------------------------
+# 2) Especificación y estimación (MCO)
+# ------------------------------------------------------------
+# Modelo: y = beta0 + beta1 * x + u
+
+regresion <- lm(y ~ x, data = df)
+summary(regresion)
+
+# Coeficientes estimados
+coeficientes <- coef(regresion)
+beta0 <- coeficientes[1]  # Intercepto
+beta1 <- coeficientes[2]  # Pendiente
+
+beta0
+beta1
+
+# Interpretación rápida (en texto, para ti):
+# - beta0: salario estimado cuando x = 0 años de experiencia.
+# - beta1: aumento medio del salario por cada año adicional de experiencia.
+
+# ------------------------------------------------------------
+# 3) Validación básica: normalidad de residuos (Jarque-Bera)
+# ------------------------------------------------------------
+# H0: residuos ~ Normal
+# Si p-valor < 0.05, rechazamos normalidad
+
+jb <- jarque.bera.test(residuals(regresion))
+jb
+
+# ------------------------------------------------------------
+# 4) Representación gráfica: nube de puntos + recta estimada
+# ------------------------------------------------------------
+plot(df$x, df$y,
+     main = "Salario vs Experiencia (nube de puntos)",
+     xlab = "Años de experiencia (X)",
+     ylab = "Salario mensual (Y)",
+     col = "red")
+
+abline(regresion, col = "blue", lwd = 2)

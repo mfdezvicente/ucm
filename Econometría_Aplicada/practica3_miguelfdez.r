@@ -1,90 +1,94 @@
 ##############################################################
-############      PRÁCTICA 3 - ECONOMETRÍA   #################
+############      EJERCICI 3 - ECONOMETRÍA   #################
 ############      MIGUEL FERNÁNDEZ VICENTE   #################
 ##############################################################
 
+# Enunciado:
+# Se desea conocer qué factores influyen en el precio de una casa utilizando el fichero
+# hprice1 (Wooldridge).
 
-#ENUNCIUADO: 
-#Se desea conocer qué factores influyen en el precio de una casa utilizando el fichero
-# hprice1 (Wooldridge). 
+# ------------------------------------------------------------
+# 1) Preparación y carga de datos
+# ------------------------------------------------------------
+rm(list = ls())
 
-#OBJETIVO: Queremos estudiar la rentabilidad de conservar el vino en función de las variables disponibles.
-#VARIABLES: Cuantitativas: pr, lluvinv, tempmed, lluvcos, edad
-# lnpr = beta0 + beta1*lluvinv + beta2*tempmed + beta3*lluvcos + beta4*edad + u
-# Queremos estudiar del beta4 (edad) si es rentable conservar el vino. 
-# El beta4 nos indica el incremento porcentual del precio del vino por cada año que pasa.
-#TAMAÑO MUESTRAL: 30 observaciones
-#MÉTODO DE ESTIMACION: Mínimos Cuadrados
-#FASES
-#1) ESPECIFICACIÓN
-#2) ESTIMACIÓN
-#3) VALIDACIÓN
-#4) PREDICCIÓN
+library(readxl)
+library(car)      # vif
+library(olsrr)    # ols_coll_diag
+library(tseries)  # Jarque-Bera
 
+datos <- read_excel("ucm/Econometría_Aplicada/Datos Hprice1.xls")
+# head(datos)
+# str(datos)
 
-# 1) Especificación: 
-# Price = b_0 + b_1 * assets + b_2 * bdrms +.......+ b_n*lsqrft + error
-# Usaremos un método de regresión simple. 
-# stimación de los coeficientes del modelo 
+# ------------------------------------------------------------
+# 2) Especificación y estimación inicial (MCO)
+# ------------------------------------------------------------
+# Modelo base (con las variables que estás usando):
+# Price = beta0 + beta1*Assess + beta2*Bdrms + beta3*Lotsize + beta4*sqrft + beta5*colonial + u
 
-# install.packages ("readxl")
-library (readxl)
+modelo_1 <- lm(Price ~ Assess + Bdrms + Lotsize + sqrft + colonial, data = datos)
+summary(modelo_1)
 
-datos = read_excel ("Datos Hprice1.xls")
-datos
-modelo = lm(Price~Assess + Bdrms + Lotsize + sqrft + colonial, data =datos)
-summary (modelo)
+# ------------------------------------------------------------
+# 3) Multicolinealidad (diagnóstico)
+# ------------------------------------------------------------
+# Regla práctica:
+# - VIF entre 4 y 10: posible sospecha
+# - VIF > 10: multicolinealidad fuerte
 
+vif(modelo_1)
 
-library(car)
-vif(modelo)
+# Diagnóstico adicional (incluye índice de condición, etc.)
+ols_coll_diag(modelo_1)
 
-# Si una de las variables está entre 4 y 10 tenemos sospechas de que el modelo tenga multicolinealidad
-# Si la multicolinealidad tiene más de 10 entonces habría multicolinealidad 
+# ------------------------------------------------------------
+# 4) Simplificación del modelo (manteniendo tu criterio)
+# ------------------------------------------------------------
+# Quitamos variables poco significativas (según p-valores) y nos quedamos con un modelo más parsimonioso.
 
-install.packages("olsrr")
-library(olsrr)
-ols_coll_diag(modelo)
-
-
-
-modelo_2 = lm(Price~ + Bdrms + Lotsize + sqrft + colonial, data =datos)
+modelo_2 <- lm(Price ~ Bdrms + Lotsize + sqrft + colonial, data = datos)
 summary(modelo_2)
 
-# Quito el que tiene el p-valor más grande 
-
-
-modelo_3 = lm(Price~  Bdrms + Lotsize + sqrft, data =datos)
+# Quitamos la variable con mayor p-valor (según tu estrategia):
+modelo_3 <- lm(Price ~ Bdrms + Lotsize + sqrft, data = datos)
 summary(modelo_3)
 
-
-modelo_4 = lm(Price~  Bdrms + Lotsize + sqrft +0, data =datos)
+# OJO: aquí tú decides estimar SIN intercepto (+0). Lo dejo porque es tu enfoque,
+# pero normalmente no es obligatorio. Simplemente cambia la interpretación.
+modelo_4 <- lm(Price ~ Bdrms + Lotsize + sqrft + 0, data = datos)
 summary(modelo_4)
 
-residuos = residuals(modelo_4)
-jarque.bera.test(residuos)
-qqnorm(residuals(modelo_4))
-qqline(residuals(modelo_4, col ="red"))
+# ------------------------------------------------------------
+# 5) Validación: normalidad de residuos + QQ-plot
+# ------------------------------------------------------------
+residuos_4 <- residuals(modelo_4)
 
+jarque.bera.test(residuos_4)
 
-res_ordenados4 <- sort(abs(residuos), decreasing = TRUE)
+qqnorm(residuos_4, main = "QQ-plot residuos (modelo 4)")
+qqline(residuos_4, col = "red")
+
+# ------------------------------------------------------------
+# 6) Búsqueda de observaciones muy influyentes / atípicas (según residuos)
+# ------------------------------------------------------------
+# Ordenamos los residuos en valor absoluto, de mayor a menor
+res_ordenados4 <- sort(abs(residuos_4), decreasing = TRUE)
 head(res_ordenados4)
 
-datos$o76 <- 0
-datos$o76[76] <- 1
+# Creamos dummies para observaciones concretas (las que tú has señalado)
+datos$o76 <- as.integer(seq_len(nrow(datos)) == 76)
+datos$o42 <- as.integer(seq_len(nrow(datos)) == 42)
+datos$o73 <- as.integer(seq_len(nrow(datos)) == 73)
 
-
-datos$o42 <- 0
-datos$o42[42] <- 1
-
-datos$o73 <- 0
-datos$o73[73] <- 1
-modelo_5 = lm(Price~  Bdrms + Lotsize + sqrft +0 + o76 + o42 + o73, data =datos)
+# Reestimamos incluyendo esas dummies (capturan “saltos” específicos)
+modelo_5 <- lm(Price ~ Bdrms + Lotsize + sqrft + 0 + o76 + o42 + o73, data = datos)
 summary(modelo_5)
 
+# Validación de residuos del modelo final según tu criterio
+residuos_5 <- residuals(modelo_5)
 
-# Ahora sí que tenemos normalidad en los residuos lo que nos permite validar el modelo. 
-residuos = residuals(modelo_5)
-jarque.bera.test(residuos)
-qqnorm(residuals(modelo_5))
-qqline(residuals(modelo_5, col ="red"))
+jarque.bera.test(residuos_5)
+
+qqnorm(residuos_5, main = "QQ-plot residuos (modelo 5)")
+qqline(residuos_5, col = "red")

@@ -1,52 +1,52 @@
 ##############
-# PRÁCTICA 4 #
+# EJERCICIO 4 #
 ##############
 
-#Con el fin de explicar el gasto en formación profesional de los trabajadores en un
-#determinado sector económico, se ha recopilado la siguiente información para 150
-#empresas de dicho sector:
-#FORMA: Gasto en miles de euros que las empresas dedican a la formación profesional
-#de sus trabajadores.
-#INGRE: Ingresos de las empresas en miles de euros.
-#TRABA: Nº de trabajadores de las empresas.
-#PRODU: Índice de productividad de los trabajadores.
-#La última vez que se realizó un estudio similar, se constató que la varianza del término
-#de error del modelo era directamente proporcional al índice de productividad de los
-#trabajadores. 
+# Enunciado:
+# Se quiere explicar el gasto en formación profesional (FORMA, miles €) en función de:
+# - INGRE: ingresos (miles €)
+# - TRABA: nº trabajadores
+# - PRODU: índice de productividad
+# Además, se conoce por un estudio previo que Var(u_i) es directamente proporcional a PRODU_i.
 
+# ------------------------------------------------------------
+# 1) Preparación y carga de datos
+# ------------------------------------------------------------
+rm(list = ls())
 
-# FASES
-# 1) Especificación del modelo.
-# En este caso, es una regresión simple.
-# 2) Estimación de los coeficientes del modelo.
-# 3) Validación del modelo.
-# 4) Predicción. 
-
-
-# install.packages ("readxl")
-library (readxl)
-
-datos = read_excel ("Datos_pr4.xlsx")
-datos
-
-
-modelo = lm(FORMA~INGRE + PRODU + TRABA, data =datos)
-summary (modelo)
-# cOMO LA PRODUCTIVIDAD NOS ESTÁ DICIENDO QUE NO ES SIGNIFICATIVA, LA PODEMOS ELIMINAR 
-
-modelo = lm(FORMA~INGRE + PRODU + TRABA, data =datos)
-summary (modelo)
-
-# QUEREMOS VER SI HAY HETEROCEDASTICIDAD. PARA ELLO USAMOS EL TEST DE HETEROCEDASTICIDAD DE BPO WHITE
-
+library(readxl)
 library(lmtest)
-bptest(modelo)
 
-# PODEMOS RECHAZAR LA HIPOTESIS NULA: AFIRMANDO LA EXISTENCIA DE HETEROCESATICIDAD
-# ES POR ELLO QUE COGEMOS LA PONDERACIÓN QUE NOS DIO EN EL EJECICIO.
+datos <- read_excel("ucm/Econometría_Aplicada/Datos_pr4.xlsx")
+# head(datos)
+# str(datos)
 
-modelo_p <- lm(FORMA ~ INGRE + PRODU + TRABA , data = datos, weights = 1/PRODU)
-summary (modelo_p)
-bptest(modelo_p)
+# ------------------------------------------------------------
+# 2) Estimación inicial por MCO
+# ------------------------------------------------------------
+# Modelo base:
+# FORMA = beta0 + beta1*INGRE + beta2*PRODU + beta3*TRABA + u
 
-# Ahora podemos ver que el test de BP nos da que el p-valor es 0.5 por tanto no podemos rechazar la hipotesis nula. 
+modelo_mco <- lm(FORMA ~ INGRE + PRODU + TRABA, data = datos)
+summary(modelo_mco)
+
+# ------------------------------------------------------------
+# 3) Comprobación de heterocedasticidad (BP)
+# ------------------------------------------------------------
+# H0: homocedasticidad
+# H1: heterocedasticidad
+bp_mco <- bptest(modelo_mco)
+bp_mco
+
+# ------------------------------------------------------------
+# 4) Estimación por Mínimos Cuadrados Ponderados (WLS)
+# ------------------------------------------------------------
+# Según el enunciado: Var(u_i) ∝ PRODU_i
+# -> pesos recomendados: w_i = 1 / PRODU_i
+
+modelo_wls <- lm(FORMA ~ INGRE + PRODU + TRABA, data = datos, weights = 1/PRODU)
+summary(modelo_wls)
+
+# Repetimos BP como comprobación tras ponderar
+bp_wls <- bptest(modelo_wls)
+bp_wls
