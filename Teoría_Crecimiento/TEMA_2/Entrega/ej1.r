@@ -98,10 +98,58 @@ plot(time, log(y_pc), type="l", lwd=2, xlab="t", ylab="log(Y/N)",
      main="log(Output per cápita)")
 abline(v=t0, lty=2)
 
-# (5) log c per cápita
-plot(time, log(c_pc), type="l", lwd=2, xlab="t", ylab="log(C/N)",
-     main="log(Consumo per cápita)")
+# === Zoom en log(C/N) y dos pendientes en rojo ===
+
+yy <- log(c_pc)
+
+# ventana de zoom (ajústala si quieres)
+win <- time >= 45 & time <= 70
+
+# punto de anclaje en t0 (el valor de log(C/N) justo en t0)
+i0 <- which.min(abs(time - t0))
+y0 <- yy[i0]
+
+# rectas de referencia (en rojo), ambas pasan por (t0, y0)
+line_g1 <- y0 + g1 * (time - t0)
+line_g2 <- y0 + g2 * (time - t0)
+
+# para que no se recorte, usa el rango de yy en la ventana
+# y añade un pequeño margen
+yr  <- range(yy[win], line_g1[win], line_g2[win])
+pad <- 0.05 * diff(yr)
+ylim_zoom <- c(yr[1] - pad, yr[2] + pad)
+
+plot(time[win], yy[win],
+     type="l", lwd=2, xlab="t", ylab="log(C/N)",
+     main="log(Consumo per cápita) (zoom + rectas g1,g2)",
+     ylim=ylim_zoom)
 abline(v=t0, lty=2)
+
+# rectas en rojo
+lines(time[win], line_g1[win], col="red", lwd=2, lty=2)  # pendiente g1
+lines(time[win], line_g2[win], col="red", lwd=2, lty=3)  # pendiente g2
+
+legend("topleft",
+       legend=c("log(C/N)", paste0("recta pendiente g1=", g1),
+                paste0("recta pendiente g2=", g2)),
+       lwd=c(2,2,2), lty=c(1,2,3), col=c("black","red","red"),
+       bty="n")
+
+
+
+
+gc_pc <- diff(log(c_pc))/dt
+tt <- time[-1]
+
+win2 <- tt >= 45 & tt <= 120
+plot(tt[win2], gc_pc[win2],
+     type="l", lwd=2, xlab="t", ylab="g_{C/N}(t)",
+     main="Crecimiento per cápita del consumo")
+abline(v=t0, lty=2)
+abline(h=g1, lty=3)
+abline(h=g2, lty=3)
+
+
 
 # (6) tasa de crecimiento per cápita (y)
 plot(time[-1], gy_pc, type="l", lwd=2, xlab="t", ylab="g_{Y/N}(t)",
