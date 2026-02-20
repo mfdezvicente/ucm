@@ -8,7 +8,7 @@ rm(list = ls())
 
 #2) VARIABLES
 library(readxl)
-datos=read_excel("C:/Users/Jose/Dropbox/PC/Documents/EcoMates/Economía/Quinto/Econometría Aplicada/Tema 2/Práctica 2_3 bwght.xls",na=".")
+datos=read_excel("C:/Users/Usuario/GitHub/ucm/Econometría_Aplicada/ENTREGA_2/PrÃ¡ctica 2_3 bwght.xls",na=".")
 
 #Explicativas:
 #X1: Paquetes de tabaco fumados al días durante el embarazo (packs)
@@ -37,7 +37,7 @@ summary(modelo1)
 #3) Validación del modelo
 
 #Los coefs significativos
-#R^2 bastante bajo, explica un 18,76%
+#R^2 bastante bajo, explica un 3,5%
 
 library(tseries)
 jarque.bera.test(residuals(modelo1))
@@ -56,7 +56,7 @@ summary(modelo_biet,diagnostics='T')
 
 #nos ha faltado la primera etapa:
 
-modelo_1e=lm(packs~cigprice+male+parity+lfaminc,data=datos)
+modelo_1e=lm(packs~cigprice + male+parity+lfaminc,data=datos)
 summary(modelo_1e) #aquí podemos ver que la variable cigprice no tiene coeficiente significativo con packs
 #mal instrumento cigprice
 
@@ -86,5 +86,29 @@ hist(residuals(modelo1)) #colas bastante largas
 #válidos en esta base de datos para aislar la exogeneidad del consumo de tabaco, debiendo 
 #interpretar los resultados iniciales de MCO con cautela, asumiendo su potencial sesgo
 
+datos
 
+
+#Quizás podamos ver que la educación de la madre sí que tiene que ver con los lo que fuma. 
+modelo_1e_2=lm(packs~male+parity+lfaminc+motheduc,data=datos)
+summary(modelo_1e_2) #aquí podemos ver que la educación de la madre es un parámetro muy significaticvo con el número de packs de cigarro que fuma. 
+
+library("AER")
+modelo_2e=ivreg(lbwght~packs+male+parity+lfaminc|male+parity+lfaminc+motheduc,data=datos)
+summary(modelo_2e,diagnostics='TRUE')
+      #Validación:
+      #No se rechaza la hipótesis nula, q era exogeneidad
+      # 0.731, 0.118>0.05, educ es exógena
+
+
+# Parece que en esta base de datos no hemos sido capaces de poder eliminar esa normalidad en los resiudos al no disponer de ningún instrumento
+
+
+
+# Vamos a probar otra de las maneras que es usar como instrumentos el precio del cigarrillo y el las taxes, ambas podrían ser instrumento para fumar. 
+modelo_1e=lm(packs~cigprice+ cigtax + male+parity+lfaminc,data=datos)
+summary(modelo_1e) #
+# Nunguna de las dos parece significativa con relación a los packs. De todas maneras vamos a comprobar el el F conjunto de los instrumentos
+library(car)
+linearHypothesis(modelo_1e, c("cigprice = 0", "cigtax = 0"))
 
