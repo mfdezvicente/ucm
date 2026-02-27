@@ -48,6 +48,7 @@ muestras_ordenado_con_rep <- function(Omega, n){
   )
 }
 
+
 # 2.2.2 Ordenado sin reposición
 # Filtramos las tuplas donde todos los elementos de cada fila son distintos
 muestras_ordenado_sin_rep <- function(Omega, n){
