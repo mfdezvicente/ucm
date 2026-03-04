@@ -1,114 +1,183 @@
-#PRÁCTICA 2.3
+##############################################################
+############   ENTREGA 2 - EJERCICIO 2 (bwght)  ##############
+############      MIGUEL FERNÁNDEZ VICENTE      ##############
+##############################################################
+# Objetivo:
+# Estudiar el efecto del consumo de tabaco de la madre durante el embarazo
+# sobre el peso del bebé al nacer.
+#
+# Dataset: bwght (Wooldridge) en formato .xls
+# Variable dependiente:
+#   - lbwght: log(peso del bebé al nacer)
+#
+# Regressors (controles):
+#   - packs: paquetes fumados al día durante el embarazo
+#   - male: dummy (1 si el bebé es niño)
+#   - parity: orden de nacimiento
+#   - lfaminc: log(ingreso familiar)
+#
+# Posible problema:
+#   - Endogeneidad de packs (hábitos de salud, nutrición, estrés, etc.)
+# Estrategia:
+#   1) Estimar MCO
+#   2) Diagnosticar residuos (normalidad)
+#   3) Probar IV/2SLS con distintos instrumentos:
+#        - cigprice
+#        - cigprice + cigtax
+#        - motheduc
+#   4) Validar instrumentos (primera etapa y tests diagnósticos)
+##############################################################
 
-#0) Borrar espacio
+# ------------------------------------------------------------
+# 0) Preparación
+# ------------------------------------------------------------
 rm(list = ls())
 
-#1) OBJETIVO
-#Estudiar el efecto del consumo del tabaco de las madres en el peso de los bebés al nacer
+# Paquetes
+library(readxl)    # leer .xls
+library(AER)       # ivreg
+library(lmtest)    # coeftest, tests
+library(sandwich)  # errores robustos
+library(tseries)   # Jarque-Bera
+library(car)       # linearHypothesis
 
-#2) VARIABLES
-library(readxl)
-datos=read_excel("C:/Users/Usuario/GitHub/ucm/Econometría_Aplicada/ENTREGA_2/PrÃ¡ctica 2_3 bwght.xls",na=".")
+# ------------------------------------------------------------
+# 1) Cargar datos
+# ------------------------------------------------------------
+# Ajusta esta ruta a la tuya (la que usas en GitHub / carpeta)
+datos <- read_excel("ucm/Econometría_Aplicada/ENTREGA_2/Práctica 2_3 bwght.xls", na = ".")
 
-#Explicativas:
-#X1: Paquetes de tabaco fumados al días durante el embarazo (packs)
-#X2: Indicador de si el bebé es niño (male)
-#X3: Orden de nacimiento del bebé (parity)
-#X4: Ingresos mensuales de la familia en log (lfaminc)
+# Vista rápida
+# head(datos)
+# str(datos)
 
-#Dependiente:
-#Y: Peso del bebé (lbwght)
+# Tamaño muestral (en tu caso te daba 1388)
+n <- length(datos$lbwght)
+n
 
+# ------------------------------------------------------------
+# 2) Modelo MCO (baseline)
+# ------------------------------------------------------------
+m_ols <- lm(lbwght ~ packs + male + parity + lfaminc, data = datos)
+summary(m_ols)
 
-#3) TAMAÑO MUESTRAL
-#Muestra de trabajadores mayores de 22 años de la región a estudiar
-n=length(datos$lbwght)
-n #1388
+# Interpretación rápida (para ti):
+# packs < 0 => más tabaco, menor peso al nacer (en log)
+# Aproximación en %: 100 * beta_packs
 
-#4) MODELO
+beta_packs <- coef(m_ols)["packs"]
+cat("Efecto aproximado en % por +1 pack/día:", round(100 * beta_packs, 2), "%\n")
 
-#A)
-#1)Especificación
-#Y=b0+b1X1+b2X2+b3X3+b4X3+u 
-#2)Estimación de los coeficientes
-modelo1=lm(lbwght~packs+male+parity+lfaminc, data=datos)
-summary(modelo1)
+# Errores robustos (por si el examen te pide inferencia robusta)
+coeftest(m_ols, vcov = vcovHC(m_ols, type = "HC1"))
 
-#3) Validación del modelo
+# ------------------------------------------------------------
+# 3) Diagnóstico: normalidad de residuos
+# ------------------------------------------------------------
+res_ols <- residuals(m_ols)
 
-#Los coefs significativos
-#R^2 bastante bajo, explica un 3,5%
+# Test Jarque-Bera
+jarque.bera.test(res_ols)
 
-library(tseries)
-jarque.bera.test(residuals(modelo1))
-#p-value < 2.2e-16, los errores no son normales, puede ser por endogeneidad
+# Histograma de residuos (puedes guardarlo a png si quieres)
+# png("hist_residuos_ols.png", width = 900, height = 600)
+hist(res_ols, main = "Histograma de residuos (MCO)", xlab = "residuos")
+# dev.off()
 
-#Vamos a interpretar que la cov entre los packs y el error es distinto de cero
+# QQ-plot (opcional)
+# qqnorm(res_ols); qqline(res_ols, col="red")
 
-#pensamos en el instrumento cigprice, precio del cigarro
-#regla de inclusión, el precio del cigarro correlacionado con los paquetes que se fuma la madre
-#regla de exclusión, que no esté correlacionado con el peso del bebe directamente
+# Nota:
+# En muestras grandes, la no normalidad de residuos no invalida MCO,
+# pero puede ser un indicio de colas largas / outliers / heterogeneidad.
 
-modelo_biet=ivreg(lbwght~packs+male+parity+lfaminc|cigprice+male+parity+lfaminc,data=datos)
-summary(modelo_biet,diagnostics='T')
+# ------------------------------------------------------------
+# 4) Sospecha de endogeneidad y IV (2SLS)
+# ------------------------------------------------------------
+# Idea: packs puede estar correlacionado con u (hábitos de salud, etc.)
+# Se prueban instrumentos.
 
-#es un desastre, ninguna variable es significativa, los instrumentos son débiles
+# ------------------------------------------------------------
+# 4A) Instrumento 1: cigprice
+# ------------------------------------------------------------
+# 2SLS:
+m_iv_price <- ivreg(lbwght ~ packs + male + parity + lfaminc |
+                      cigprice + male + parity + lfaminc,
+                    data = datos)
 
-#nos ha faltado la primera etapa:
+summary(m_iv_price, diagnostics = TRUE)
 
-modelo_1e=lm(packs~cigprice + male+parity+lfaminc,data=datos)
-summary(modelo_1e) #aquí podemos ver que la variable cigprice no tiene coeficiente significativo con packs
-#mal instrumento cigprice
+# Primera etapa explícita (muy importante en exámenes):
+fs_price <- lm(packs ~ cigprice + male + parity + lfaminc, data = datos)
+summary(fs_price)
 
-#si hicieramos el histograma de los residuos
-hist(residuals(modelo1)) #colas bastante largas
+# Conclusión típica si cigprice no es significativo:
+# -> problema de instrumento débil: no explica packs
 
-#El modelo original estimado por MCO para predecir el logaritmo del peso del bebé (lbwght) 
-#en función de los paquetes fumados (packs) presentaba problemas de no normalidad en los 
-#residuos, lo que sugiere una posible endogeneidad por variable omitida. 
+# ------------------------------------------------------------
+# 4B) Instrumentos 2: cigprice + cigtax (conjunto)
+# ------------------------------------------------------------
+fs_price_tax <- lm(packs ~ cigprice + cigtax + male + parity + lfaminc, data = datos)
+summary(fs_price_tax)
 
-#Existen factores inobservables (como hábitos de salud generales de la madre, 
-#nutrición o estrés) que están correlacionados tanto con la decisión de fumar como con 
-#el peso final del bebé, provocando que Cov(packs, u) =! 0.Para solucionar este sesgo 
-#de MCO, se planteó un modelo de Mínimos Cuadrados Bietápicos (MC2E) buscando instrumentos 
-#que cumplieran la regla de relevancia y exclusión. Se propuso el precio del tabaco 
-#(cigprice).Sin embargo, al estimar la Primera Etapa, 
-#los resultados demuestran un claro problema de Instrumento Débil. 
-#El precio del tabaco (p-valor = 0.84) no
-#resulta ser variable estadísticamente significativa para explicar la cantidad de 
-#paquetes fumados por las madres embarazadas en esta muestra. La demanda de tabaco en este 
-#grupo poblacional se muestra totalmente inelástica al precio.
+# Contraste conjunto de relevancia: H0 cigprice=0 y cigtax=0
+linearHypothesis(fs_price_tax, c("cigprice = 0", "cigtax = 0"))
 
-#Por lo tanto, la aplicación 
-#de MC2E con estos instrumentos no es estadísticamente válida. Los instrumentos débiles 
-#inflan drásticamente las varianzas de los estimadores en la segunda etapa, haciendo que 
-#cualquier inferencia causal sea imprecisa. En conclusión, no disponemos de instrumentos 
-#válidos en esta base de datos para aislar la exogeneidad del consumo de tabaco, debiendo 
-#interpretar los resultados iniciales de MCO con cautela, asumiendo su potencial sesgo
+m_iv_price_tax <- ivreg(lbwght ~ packs + male + parity + lfaminc |
+                          cigprice + cigtax + male + parity + lfaminc,
+                        data = datos)
 
-datos
+summary(m_iv_price_tax, diagnostics = TRUE)
 
+# Si el F conjunto es bajo (regla práctica < 10), instrumentos débiles.
 
-#Quizás podamos ver que la educación de la madre sí que tiene que ver con los lo que fuma. 
-modelo_1e_2=lm(packs~male+parity+lfaminc+motheduc,data=datos)
-summary(modelo_1e_2) #aquí podemos ver que la educación de la madre es un parámetro muy significaticvo con el número de packs de cigarro que fuma. 
+# ------------------------------------------------------------
+# 4C) Instrumento alternativo: motheduc
+# ------------------------------------------------------------
+# OJO ECONOMÉTRICO:
+# motheduc puede ser relevante para packs (sí), pero exogeneidad es discutible:
+# educación de la madre podría afectar al peso del bebé por otras vías (nutrición, cuidados).
+# Aun así, lo probamos como ejercicio.
 
-library("AER")
-modelo_2e=ivreg(lbwght~packs+male+parity+lfaminc|male+parity+lfaminc+motheduc,data=datos)
-summary(modelo_2e,diagnostics='TRUE')
-      #Validación:
-      #No se rechaza la hipótesis nula, q era exogeneidad
-      # 0.731, 0.118>0.05, educ es exógena
+# (Al tener motheduc, puede haber NA; tu summary indicaba 1 obs eliminada)
+fs_meduc <- lm(packs ~ male + parity + lfaminc + motheduc, data = datos)
+summary(fs_meduc)
 
+m_iv_meduc <- ivreg(lbwght ~ packs + male + parity + lfaminc |
+                      male + parity + lfaminc + motheduc,
+                    data = datos)
 
-# Parece que en esta base de datos no hemos sido capaces de poder eliminar esa normalidad en los resiudos al no disponer de ningún instrumento
+summary(m_iv_meduc, diagnostics = TRUE)
 
+# ------------------------------------------------------------
+# 5) Comparación rápida entre modelos (opcional)
+# ------------------------------------------------------------
+# Función útil para comparar coeficiente de packs
+extrae_coef <- function(mod, nombre = "packs"){
+  c(est = coef(mod)[nombre],
+    se  = sqrt(diag(vcov(mod)))[nombre])
+}
 
+cat("\nComparación coeficiente packs (estimación y se):\n")
+cat("MCO       :", extrae_coef(m_ols), "\n")
 
-# Vamos a probar otra de las maneras que es usar como instrumentos el precio del cigarrillo y el las taxes, ambas podrían ser instrumento para fumar. 
-modelo_1e=lm(packs~cigprice+ cigtax + male+parity+lfaminc,data=datos)
-summary(modelo_1e) #
-# Nunguna de las dos parece significativa con relación a los packs. De todas maneras vamos a comprobar el el F conjunto de los instrumentos
-library(car)
-linearHypothesis(modelo_1e, c("cigprice = 0", "cigtax = 0"))
+# Para ivreg, vcov por defecto es homocedástica. Puedes usar robusta si quieres:
+# Ejemplo robusto para IV:
+vcov_iv_rob <- vcovHC(m_iv_meduc, type = "HC1")
+cat("IV(meduc) :", c(est = coef(m_iv_meduc)["packs"],
+                    se  = sqrt(diag(vcov_iv_rob))["packs"]), "\n")
 
+# ------------------------------------------------------------
+# 6) Conclusión tipo examen (para ti, en comentarios)
+# ------------------------------------------------------------
+# - MCO: packs negativo y significativo -> fumar reduce lbwght.
+# - IV con cigprice (y con cigprice+cigtax): instrumentos débiles (no explican packs).
+#   => 2SLS no fiable, varianzas grandes, coeficiente de packs impreciso.
+# - IV con motheduc: instrumento más relevante (first stage fuerte),
+#   pero Wu-Hausman no rechaza endogeneidad -> no evidencia clara de que MCO esté sesgado.
+#   Además, exogeneidad de motheduc es debatible.
+#
+# Resultado práctico:
+# - Presentar MCO como baseline y discutir limitaciones.
+# - Explicar por qué IV no funciona con esos instrumentos (debilidad/exogeneidad).
+##############################################################
