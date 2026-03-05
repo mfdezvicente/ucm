@@ -1,7 +1,7 @@
 ############################################################
 # TEMA 1 · INTRODUCCIÓN — TÉCNICAS DE MUESTREO (SCRIPT .R)
 # Objetivo: replicar el contenido del .Rmd en formato R
-# Autor: (pon tu nombre)
+# Autor: Miguel Fernández
 ############################################################
 
 #############################
@@ -35,7 +35,6 @@ u[1]; u[2]; u[3]; u[4]
 # - No ordenado: (A, B) y (B, A) son la misma muestra
 ############################################################
 
-
 ########################################
 # 2) Enumeración completa de muestras
 ########################################
@@ -47,7 +46,9 @@ muestras_ordenado_con_rep <- function(Omega, n){
     expand.grid(rep(list(Omega), n), stringsAsFactors = FALSE)
   )
 }
-
+Omega <- c("Mbappe", "Rodrygo" , "Vini", "Mastantuono", "Gonzalo", "Brahim", "Bellingham")
+n <- 3
+muestras_ordenado_con_rep(Omega, n)
 
 # 2.2.2 Ordenado sin reposición
 # Filtramos las tuplas donde todos los elementos de cada fila son distintos
@@ -57,12 +58,14 @@ muestras_ordenado_sin_rep <- function(Omega, n){
   df[keep, , drop = FALSE]
 }
 
+
+
 # 2.2.3 No ordenado sin reposición
 # combn devuelve combinaciones (sin orden) sin repetición
 muestras_no_ordenado_sin_rep <- function(Omega, n){
   t(combn(Omega, n))
-}
-
+  }
+muestras_no_ordenado_sin_rep(Omega, n)
 # 2.2.4 No ordenado con reposición
 # Truco general: 
 # (i) generamos las tuplas ordenadas con reposición
@@ -73,6 +76,9 @@ muestras_no_ordenado_con_rep <- function(Omega, n){
   sorted_rows <- t(apply(df, 1, sort))
   unique(sorted_rows)
 }
+muestras_no_ordenado_con_rep(Omega, n)
+
+
 
 # Ejemplo con Ω={A,B,C,D}, n=2
 Omega <- c("A","B","C","D")
@@ -121,10 +127,12 @@ PN  <- function(N) factorial(N)
 # Permutación con repetición:
 # Si hay N elementos en total, y repeticiones a,b,c,... con sum(a_vec)=N:
 # PR = N!/(a! b! c! ...)
+
 PR  <- function(a_vec){
   N <- sum(a_vec)
   factorial(N) / prod(factorial(a_vec))
 }
+
 
 # Comprobación con N=4, n=2 (debería dar 12, 6, 16, 10)
 N <- 4; n <- 2
