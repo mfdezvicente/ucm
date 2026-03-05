@@ -58,3 +58,5 @@ prediccion
 
 prediccion <- predict(modelo_logitmult,newdata=nuevos_datos)
 prediccion
+
+#HOla
