@@ -33,7 +33,7 @@ datasets/
 outputs/
 models/
 reports/
-#*.pdf
+*.pdf
 *.png
 *.jpg
 
