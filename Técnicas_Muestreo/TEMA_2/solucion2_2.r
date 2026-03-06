@@ -199,5 +199,111 @@ total_poblacional <- sum(X)
 media_poblacional <- mean(X)
 
 # =========================
-# Ejercicio 7 - Características Poblacioneales y Muestrales
+# Ejercicio 7 - Estimadores insesgaos del total y de la media
+# =========================
+N <- 80
+n <- 10
+x <- c(12.1, 10.8, 11.4, 13.2, 9.7, 12.6, 10.1, 11.9, 13.0, 10.5)
+
+# a)  Calcular el estimador de la media poblaciona 
+est_media(x)
+# b) Calcular el estimador del total poblacional 
+est_total(x,N)
+# c) Estimar las varianzas de los estimadores
+var_hat_media(x,N)
+var_hat_total(x,N)
+# d) Error de muestreo de ambos estimadores 
+error_muestreo(var_hat_media(x,N)) # Error de muestreo de la media
+error_muestreo(var_hat_total(x,N)) # Error de muestreo del total 
+
+
+# =========================
+# Ejercicio 8 - Proporción de unidades que cumplen una proporción
+# =========================
+
+N <- 200
+n <- 20
+
+# a) Construye la variable d
+d <- c(rep(1, 7), rep(0, n - 7))
+
+# b) Estima la proporción poblacional 
+prop <- est_prop(d)
+prop
+
+# c) Estima la varianza y el error de muestreo
+var_hat_prop(d, N)
+error_muestreo(var_hat_prop(d, N))
+
+# d) Da un intervalo de confianza al 95% 
+ic_normal(prop, var_hat_prop(d, N), alpha = 0.05)
+
+
+# =========================
+# Ejercicio 9 - Tipos de error de muestreo
+# =========================
+# Reciclamos los resultados del ejercicio 7
+N <- 80
+n <- 10
+x <- c(12.1, 10.8, 11.4, 13.2, 9.7, 12.6, 10.1, 11.9, 13.0, 10.5)
+
+est_total(x,N) #  Estimador del total
+var_hat_total(x,N) # Varianza del estimador del total
+error_muestreo(var_hat_total(x,N)) # Error de muestreo del total 
+
+
+# a) Error de muestreo 
+error_muestreo(var_hat_total(x,N))
+
+#b) Error de muestreo relativo 
+emr(est_total(x,N), var_hat_total(x,N))
+
+#c) ECM suponiendo insesgadoez 
+var_hat_total(x,N)
+
+#d) EMA al 95%. Esto es la semianchura del IC 
+ema(var_hat_total(x,N), alpha = 0.05)
+
+#e) IC 
+
+ic <- ic_normal(est_total(x,N) , var_hat_total(x,N), alpha = 0.05)
+comprobacion <- ((ic[2]) - (ic[1]))/2
+comprobacion
+
+
+# =========================
+# Ejercicio 10 - Ejercicio Integrador. Población Pequeña y enumeración total
+# =========================
+
+X <- c(4, 7, 10, 12, 17)
+N <- length(X)
+
+n <- 2
+
+# a) Genera todas las muestas posibles
+muestras <- combn(X, n, simplify = FALSE)
+muestras
+
+#b) Calcular la probabilidad de una muestra cualquiera
+prob_muestra(N,n)
+# [1] 0.1
+
+#c) Calcula las pis con fórmula
+pi_1(N,n) # [1] 0.4
+pi_2(N,n) # [1] 0.1
+
+# d) Para cada muestra calcula X = Nx_media
+
+total_por_muestra <- sapply(muestras, function(x) N * mean(x))
+total_por_muestra
+
+# e) Calcula por enumenración el total de la esperanza de X 
+# Comparamos la esperanza por enumeración 
+mean(total_por_muestra)
+# [1] 50 
+sum(X)
+# [1] 50
+
+# =========================
+# Ejercicio 11 - Ejercicio Integrador. Población Pequeña y enumeración total
 # =========================
