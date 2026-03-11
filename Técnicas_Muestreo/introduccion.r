@@ -242,6 +242,8 @@ c(media_poblacion = mu_pop,
 #############################
 # 6.2 No respuesta
 #############################
+# Haces primero la sample pero es que de eso no te responden todos
+
 set.seed(2)
 
 N <- 5000
