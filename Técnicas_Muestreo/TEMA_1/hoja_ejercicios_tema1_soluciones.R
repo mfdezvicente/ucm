@@ -336,3 +336,28 @@ resumen_diseno <- function(Omega, n, tipo=c("ocr","osr","nosr","nocr")){
 # prueba
 Omega <- LETTERS[1:5]; n <- 3
 lapply(c("ocr","osr","nosr","nocr"), function(t) resumen_diseno(Omega,n,t)$m)
+
+
+
+# ------------------------------
+# Ejercicio 17
+# ------------------------------
+
+
+N <- 10000
+Y <- rnorm(N, mean = 0, sd = 1)
+A <- rbinom(N, 1, 0.2)
+n <- 1000 
+mu_y <- mean(Y)
+
+set.seed(1)
+muestra <- which(A ==1)
+idx <- sample(muestra,n, replace = FALSE)
+mu_preguntado <- mean(Y[idx])
+
+mu_preguntado
+
+
+resp <- c(mu_y = mu_y, mu_preguntado = mu_preguntado, sesgo = mu_preguntado - mu_y)
+
+# Esto sería en el caso de que no hubiera dependencia de Y 

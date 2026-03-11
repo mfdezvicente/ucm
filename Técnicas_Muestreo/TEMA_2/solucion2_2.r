@@ -307,3 +307,30 @@ sum(X)
 # =========================
 # Ejercicio 11 - Ejercicio Integrador. Población Pequeña y enumeración total
 # =========================
+
+N <- 150 
+n <- 15
+
+x <- c(58, 72, 65, 61, 84, 75, 69, 63, 71, 66, 79, 60, 68, 74, 77)
+
+# a) Estimar el coste medio poblacional 
+est_media(x)
+var_hat_media(x, N)
+ic_normal(est_media(x), var_hat_media(x, N), alpha = 0.05)
+
+
+# b) Estimar el coste total poblacional y su IC del 95%
+est_total(x, N)
+var_hat_total(x, N)
+ic_normal(est_total(x, N), var_hat_total(x, N), alpha = 0.05)
+
+
+# c) Estimar la proporción de reparaciones con coste superior a 70€ y su IC del 95% 
+d <- as.integer(x > 70)
+est_prop(d)
+var_hat_prop(d, N)
+ic_normal(est_prop(d), var_hat_prop(d, N), alpha = 0.05)
+
+# d) Calcular el EMR del estimador del total.ç
+emr <- emr(est_total(x, N), var_hat_total(x, N))
+emr
