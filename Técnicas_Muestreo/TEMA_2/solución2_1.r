@@ -236,3 +236,6 @@ e <- error_muestreo(var_hat_total(x,N))
 EMR <- emr(est_total(x,N), var_hat_total(x, N))
 ECM <- var_hat_total(x, N) # Esto es porque es insengado
 EMA_95 <- ema(var_hat_total(x, N), alpha = 0.05) # Semianchura del IC95
+
+
+0.3*2.5 + 0.3*0.7 + 0.7*1.4 - 3

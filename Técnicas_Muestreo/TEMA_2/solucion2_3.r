@@ -293,4 +293,7 @@ IC_p_95 <- ic_normal(phat, Vhat_p, alpha = 0.05)
 datos
 
 
+
+
+
 xbar_hat
