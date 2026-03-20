@@ -1,4 +1,4 @@
-# Soluciones (Tema 1) - Hoja de ejercicios
+  # Soluciones (Tema 1) - Hoja de ejercicios
 
 ## Funciones auxiliares
 
@@ -364,3 +364,5 @@ mu_preguntado
 resp <- c(mu_y = mu_y, mu_preguntado = mu_preguntado, sesgo = mu_preguntado - mu_y)
 
 # Esto sería en el caso de que no hubiera dependencia de Y 
+
+
