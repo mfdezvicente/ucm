@@ -7,6 +7,9 @@ muestras_ordenado_con_rep <- function(Omega, n){
   as.data.frame(expand.grid(rep(list(Omega), n), stringsAsFactors = FALSE))
 }
 
+Omega <- c(1,2,3)
+n <-2
+muestras_ordenado_con_rep(Ome)
 # Ordenado sin reposición
 muestras_ordenado_sin_rep <- function(Omega, n){
   df <- muestras_ordenado_con_rep(Omega, n)
@@ -67,6 +70,7 @@ m_emp
 
 # a)
 VRN(6,4)
+6**4
 
 # b) fórmula
 choose(4,2) * (1/6)^2 * (5/6)^2
@@ -114,7 +118,6 @@ CN(12,4) * VN(4,2)
 tab <- table(strsplit("MUESTREO","")[[1]])
 tab
 PR(as.integer(tab))
-
 
 # ------------------------------
 # Ejercicio 8

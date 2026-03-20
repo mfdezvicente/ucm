@@ -149,6 +149,11 @@ total_muestras(N,n)
 pi1_rep <- function(N,n){
     1- ((N-1)/N)**n
 }
+N <- 3
+n<- 2
+pi <- pi1_rep(N,n)
+pi
+5/9
 calc_ui <- function(X, n){
     muestras <- muestras_no_ordenadas_repetidas(X,n)
     probabilidad <- apply(muestras, 1, function(fila) as.integer("u1" %in% fila))
