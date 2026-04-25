@@ -1,62 +1,85 @@
-#PRÁCTICA 3.2 - María Belén Bilbao Pavón
+##############################################################
+############   ENTREGA 3 - PRÁCTICA 3.2 (TABACO) ##############
+##############################################################
+# Objetivo:
+# Estudiar el hábito de tabaquismo (FUMA) y realizar una predicción.
+# FUMA: 0 = fuma, 1 = exfumador, 2 = nunca ha fumado
+#
+# Variables explicativas (según enunciado):
+# EDAD, SUENO, ALCOHOL, EJERTL (y en el dataset también puede haber EJERTRA, ESTUDIO, etc.)
+#
+# Método:
+# Logit multinomial (multinom, paquete nnet)
+##############################################################
 
-# LECTURA DE LOS DATOS
-datos <- read.table("C:/Users/maria/Desktop/QUINTO/3 ECONOMETRIA APLICADA/Práctica 3_2 Habitos_Tabaco.txt", header=TRUE,sep="\t")
+rm(list = ls())
 
-# PARA ESTIMAR ESTE LOGIT MULTINOMIAL 
+# ------------------------------------------------------------
+# 1) Lectura de datos
+# ------------------------------------------------------------
+datos <- read.table(
+  "C:/Users/Usuario/GitHub/ucm/Econometría_Aplicada/ENTREGA_3/Práctica 3_2 Habitos_Tabaco.txt",
+  header = TRUE, sep = "\t"
+)
 
+# Variable dependiente como factor
+datos$FUMA <- factor(datos$FUMA)  # niveles: "0","1","2" (según tu salida)
 
-#Se le da este formato de factror en lugar de numérico
-#install.packages("nnet")
+# ------------------------------------------------------------
+# 2) Estimación logit multinomial
+# ------------------------------------------------------------
 library(nnet)
 
-datos$FUMA <- factor(datos$FUMA)
+# Por defecto toma como referencia el primer nivel (normalmente "0")
+modelo_mult <- multinom(FUMA ~ EDAD + SUENO + ALCOHOL + EJERTL, data = datos)
+summary(modelo_mult)
 
-modelo_logitmult <- multinom(FUMA ~ EDAD + SUENO + ALCOHOL + EJERTL,data=datos)
-summary(modelo_logitmult)
+# Si quieres cambiar la categoría de referencia, por ejemplo "2" (nunca ha fumado):
+datos$FUMA_ref2 <- relevel(datos$FUMA, ref = "2")
+modelo_mult_ref2 <- multinom(FUMA_ref2 ~ EDAD + SUENO + ALCOHOL + EJERTL, data = datos)
+summary(modelo_mult_ref2)
 
-#Para cambiar la categoria de referencia
-datos$FUMAN <- relevel(datos$FUMA, ref="2")
+# ------------------------------------------------------------
+# 3) Significatividad individual (z y p-valores)
+# ------------------------------------------------------------
+res <- summary(modelo_mult)
+z <- res$coefficients / res$standard.errors
 
-modelo_logitmult2 <- multinom(FUMAN ~ EDAD + SUENO + ALCOHOL + EJERTL,data=datos)
-summary(modelo_logitmult2)
+# p-valor bilateral correcto
+p <- 2 * (1 - pnorm(abs(z)))
 
-# Contrastes de sinificación individual (ya que por defecto no aparecen)
+# Tabla bonita
+tabla_z <- cbind(Coef = res$coefficients,
+                 SE = res$standard.errors,
+                 z = z,
+                 p_value = p)
+tabla_z
 
-res <- summary(modelo_logitmult)
+# ------------------------------------------------------------
+# 4) Predicción: probabilidades y clase predicha
+# ------------------------------------------------------------
+# Probabilidades por clase (type = "probs")
+prob_hat <- predict(modelo_mult, type = "probs")   # matriz NxK
+head(prob_hat)
 
-# Estadístico de contraste 
+# Clase predicha (la de probabilidad máxima)
+clase_hat <- predict(modelo_mult)  # factor con niveles 0/1/2
 
-z <- res$coefficients/res$standard.errors
+# Matriz de confusión SIN caret
+mconf <- table(Real = datos$FUMA, Predicho = clase_hat)
+mconf
 
-p <- 2-(1-pnorm(abs(z))) #ojo no me sale
+# Accuracy (tasa de acierto)
+acc <- mean(clase_hat == datos$FUMA)
+acc
 
-# mostrar resultados con cbind
-cbind(Coef=res$coefficients, SE=res$standard.errors,z=z, p_value=p)
+# ------------------------------------------------------------
+# 5) Predicción para un nuevo individuo
+# ------------------------------------------------------------
+nuevo <- data.frame(EDAD = 30, SUENO = 7, ALCOHOL = 0, EJERTL = 2)
 
-p
+pred_prob <- predict(modelo_mult, newdata = nuevo, type = "probs")
+pred_prob
 
-pred <- predict(modelo_logitmult, type="prob")
-pred
-
-#Así le asigna valores 0,1,2
-pred <- predict(modelo_logitmult)
-pred
-#install.packages("caret")
-
-#Probbilidad de acierto para validar el modelo sumando las de la diagonal 
-library(caret)
-
-confusionMatrix(as.factor(pred),as.factor(datos$FUMA))
-
-
-#Para hacer una prediccion
-nuevos_datos <- data.frame(EDAD=30, SUENO=7, ALCOHOL=0, EJERTL=2)
-
-prediccion <- predict(modelo_logitmult,newdata=nuevos_datos,type="pro")
-prediccion
-
-prediccion <- predict(modelo_logitmult,newdata=nuevos_datos)
-prediccion
-
-#HOla
+pred_clase <- predict(modelo_mult, newdata = nuevo)
+pred_clase
