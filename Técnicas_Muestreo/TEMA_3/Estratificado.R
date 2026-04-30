@@ -1,5 +1,5 @@
 #-------------------------------------------------------------------------------
-# EJERCICIO 8
+# EJERCICIO 8 - TAMAÑO MUESTRAL PARA AFIJACION PROPORCIONAL Y DE MÍNIMA VARIANZA CON Y SIN REPO (ESTIMADOR MEDIA)
 #-------------------------------------------------------------------------------
 
 n_h = function(w_h, N) w_h * N
@@ -35,6 +35,7 @@ cuasidesviacion = s(cuasivarianza)
 
 tabla = data.frame(estrato, wh, sigma, nh, cuasivarianza, cuasidesviacion)
 tabla
+
 
 prop_sin_rep = n_afij_prop_sin_rep(wh, cuasivarianza, 5, N)
 prop_sin_rep
@@ -79,7 +80,7 @@ data.frame(nh_prop_sin_rep, nh_prop_con_rep, nh_min_var_sin_rep, nh_min_var_con_
 #-------------------------------------------------------------------------------
 
 #-------------------------------------------------------------------------------
-# EJERCICIO 9
+# EJERCICIO 9 - ESTIMADOR DE LA MEDIA, ERROR DE MUESTREO (AFIJACIÓN PROPORCIONAL)
 #-------------------------------------------------------------------------------
 Nh = c(24, 36, 30, 30)
 N = sum(Nh)
@@ -142,12 +143,13 @@ se_xbar
 # El error es menor porque la muestra es muy pequeña. para muestras más grandes gana el muestreo estratificado.
 
 #-------------------------------------------------------------------------------
-# EJERCICIO 10
+# EJERCICIO 10 - ESTIMACIÓN DE LA PROPORCION Y DEL ERROR DE MUESTREO 
 #-------------------------------------------------------------------------------
 N = 10000
 nh = c(1050, 900, 1700)
 n = sum(nh)
 Nh_aprox = nh * N / n
+
 ceiling(Nh_aprox)
 sum(ceiling(Nh_aprox)) # Aquí me cato que no suma 10000 (sale 10001), así que redondeo el más pequeño para abajo.
 
@@ -172,7 +174,7 @@ data.frame(
 )
 
 #-------------------------------------------------------------------------------
-# EJERCICIO 11
+# EJERCICIO 11 - TAMAÑO MUESTRAL PARA MEDIA Y PROPORCIÓN CON REMPLAZAMIENTO
 #-------------------------------------------------------------------------------
 Nh = c(120, 80)
 N = sum(Nh)
@@ -204,3 +206,134 @@ n_prop
 
 nh_prop = Wh * n_prop
 nh_prop
+
+
+
+#####################################################################################
+## TEMA 3 - PRÁCTICA EXAMEN 
+#####################################################################################
+
+N_h = function(N, wh){
+  N*wh
+}
+
+n_h_prop = function(n, wh){
+  n*wh
+}
+n_h_min = function(n, w, sh){
+  (n*wh*sh)/sum(wh*sh)
+}
+
+S_h2 = function(N_h, sigma){
+  N_h/(N_h -1)* sigma**2
+}
+
+sh = function(S_h2){
+  sqrt(S_h2)
+}
+
+fh = function(nh, N_h)
+
+n_prop_no_rep = function(wh, S_h2, N, error){
+  sum(wh * S_h2)/(error**2  + sum(wh * S_h2)/N)
+}
+n_prop_rep = function(wh, S_h2, N, error){
+  sum(wh * S_h2)/(error**2)
+}
+
+n_min_no_rep = function(wh, sh, N, error){
+  (sum(wh * sh)**2)/(error**2  + 1/N * sum(wh * (sh**2)))
+}
+n_min_rep = function(wh, sh, error){
+  (sum(wh * sh)**2)/(error**2)
+}
+
+
+## ESTIMADORES 
+
+x_media = function(wh, x_h){
+  sum(wh * mean(x_h))
+}
+
+var_hat_media_sin_rep = function(wh, fh, S_h2, nh){
+  sum(wh**2 * (1-fh) * sh**2/nh)
+}
+
+var_hat_media_con_rep = function(wh, S_h2, nh){
+  sum(wh**2 * S_h2/nh)
+}
+
+prop = function(wh, ph){
+  sum(wh*ph)
+}
+
+
+
+
+
+
+### EJERCICIO 8 
+
+N <- 1000
+wh <- c(0.6, 0.3, 0.1)
+sigma_h <- c(4, 12, 80)
+N_h <- N*wh
+S_h2_muestra <- S_h2(N_h, sigma_h)
+sh2_muestra <- sh(S_h2_muestra)
+
+# AFIJACIÓN PROPORCIONAL NO REP
+n1 <- n_prop_no_rep(wh, S_h2_muestra, N, sqrt(5))
+n1
+ceiling(n1)
+
+nh_prop_sin_rep = n1*wh
+nh_prop_sin_rep_ceil <- ceiling(nh_prop_sin_rep)
+nh_prop_sin_rep_ceil
+# AFIJACIÓN PROPORCIONAL REP
+n2 <- n_prop_rep(wh,S_h2_muestra, N, sqrt(5))
+n2
+ceiling(n2)
+nh_prop_sin_rep_2 = n2*wh
+nh_prop_sin_rep_ceil_2 <- ceiling(nh_prop_sin_rep_2)
+nh_prop_sin_rep_ceil_2
+
+# AFIJACIÓN MINIMA VARIANZA NO REP
+n3 <- n_min_no_rep(wh, sh2_muestra, N, sqrt(5))
+n3
+ceiling(n3)
+
+nh_min_sin_rep_3 = n3*wh*sh2_muestra/(sum(wh * sh2_muestra))
+nh_min_sin_rep_ceil_3 <- ceiling(nh_min_sin_rep_3)
+nh_min_sin_rep_ceil_3
+# AFIJACIÓN MINIMA VARIANZA REP
+n4 <- n_min_rep(wh,sh2_muestra, sqrt(5))
+n4
+ceiling(n4)
+nh_min_sin_rep_4 = n4*wh*sh2_muestra/(sum(wh * sh2_muestra))
+nh_min_rep_ceil_4 <- ceiling(nh_min_sin_rep_4)
+nh_min_rep_ceil_4
+
+
+# EJERCICIO 9 
+N_h = c(24, 36, 30, 30)
+N <- 120 
+wh <- N_h/N
+n <- 20
+nh <- c(4,6,5,5)
+fh_muestra <- fh(nh, N_h)
+x1 <- c(94, 90, 102, 110)
+x2 <- c(91, 99, 93, 105, 111, 101)
+x3 <- c(108, 96, 100, 93, 93)
+x4 <- c(92,110, 94, 91, 113)
+
+muestras <- list(x1, x2, x3, x4)
+x_medias <- sapply(muestras, mean)
+ventas_medias <- x_media(wh, x_medias)
+sigma <- sapply(muestras, var)
+cuasi <- S_h2(N_h, sigma)
+varianza <- var_hat_media_con_rep(wh, sigma, nh)
+
+ventas_medias
+varianza
+error <- sqrt(varianza)
+error
