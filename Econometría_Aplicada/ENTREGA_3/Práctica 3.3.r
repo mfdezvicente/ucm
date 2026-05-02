@@ -22,7 +22,7 @@ library(AER)   # tobit
 # ------------------------------------------------------------
 # 1) Lectura de datos
 # ------------------------------------------------------------
-datos <- read_excel("ucm/Econometría_Aplicada/ENTREGA_3/Práctica 3_3 Datos apple.xls")
+datos <- read_excel("/Users/miguelfernandez/GitHub/ucm/Econometría_Aplicada/ENTREGA_3/PrÃ¡ctica 3_3 Datos apple.xls")
 
 # Vista rápida
 # head(datos)
@@ -33,6 +33,7 @@ datos <- read_excel("ucm/Econometría_Aplicada/ENTREGA_3/Práctica 3_3 Datos app
 # ------------------------------------------------------------
 # Distribución de la variable dependiente
 table(datos$ecolbs)
+
 
 # Histograma
 hist(datos$ecolbs,

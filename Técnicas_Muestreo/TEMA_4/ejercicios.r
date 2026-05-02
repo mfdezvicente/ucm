@@ -50,6 +50,7 @@ V
 ## EJERCICIO 7 - RAZÓN Y RELACIÓN 
 
 N <- 50 
+
 n <- 5 
 f <- n/N
 sumx <- 25
