@@ -135,3 +135,19 @@ var <- ((1-f)*sumdiff)/(2*n*(n-1))
 var_total <- var * N**2 
 error <- sqrt(var_total)
 error
+
+
+
+#########
+
+
+pii <- c(0.3, 0.4, 0.25)
+pij <- matrix(c(datos), nrow = 3, byrow = TRUE)
+
+B <- 0 
+
+for (i in 1:(length(x) -1)){
+    for (j in ((i+1) : length(x))){
+        B <- B + 2*
+    }
+}
