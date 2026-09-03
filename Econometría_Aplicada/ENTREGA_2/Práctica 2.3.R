@@ -46,7 +46,7 @@ library(car)       # linearHypothesis
 # ------------------------------------------------------------
 # Ajusta esta ruta a la tuya (la que usas en GitHub / carpeta)
 datos <- read_excel("ucm/Econometría_Aplicada/ENTREGA_2/Práctica 2_3 bwght.xls", na = ".")
-
+datos <- read_excel("C:/Users/Usuario/GitHub/ucm/Econometría_Aplicada/ENTREGA_2/PrÃ¡ctica 2_3 bwght.xls")
 # Vista rápida
 # head(datos)
 # str(datos)
@@ -181,3 +181,6 @@ cat("IV(meduc) :", c(est = coef(m_iv_meduc)["packs"],
 # - Presentar MCO como baseline y discutir limitaciones.
 # - Explicar por qué IV no funciona con esos instrumentos (debilidad/exogeneidad).
 ##############################################################
+
+
+

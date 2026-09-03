@@ -19,7 +19,7 @@ library(sandwich)   # vcovHC
 # library(car)      # vif (si quieres mirarlo)
 
 datos <- read_excel("ucm/Econometría_Aplicada/Datos.xlsx")
-
+datos <- read_excel("C:/Users/Usuario/GitHub/ucm/Econometría_Aplicada/ENTREGA_1/Datos.xlsx")
 # Dummies (base: estudios básicos)
 datos$D_MEDIOS     <- ifelse(datos$ESTUDIOS == 2, 1, 0)
 datos$D_SUPERIORES <- ifelse(datos$ESTUDIOS == 3, 1, 0)

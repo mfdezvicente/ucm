@@ -31,7 +31,7 @@ library(car)       # linearHypothesis
 # ------------------------------------------------------------
 # 1) Lectura de datos
 # ------------------------------------------------------------
-datos <- read_excel("C:/Users/Usuario/GitHub/ucm/Econometría_Aplicada/ENTREGA_3/Práctica 3_4 Datos.xlsx")
+datos <- read_excel("ucm/Econometría_Aplicada/ENTREGA_3/Práctica 3_4 Datos.xlsx")
 
 # Vista rápida
 print(head(datos))

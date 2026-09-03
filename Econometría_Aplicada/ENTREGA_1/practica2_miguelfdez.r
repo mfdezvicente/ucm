@@ -19,7 +19,7 @@ rm(list = ls())
 library(tseries)
 
 df <- read.csv(
-  "/Users/miguelfernandez/GitHub/ucm/Econometría_Aplicada/Pr2_Datos Bordeaux.csv",
+    "C:/Users/Usuario/GitHub/ucm/Econometría_Aplicada/ENTREGA_1/Pr2_Datos Bordeaux.csv",
   sep = ";",
   dec = ",",
   na.strings = "NA"

@@ -1,153 +1,111 @@
-muestras_sistematicas_dos <- function(N,n){
-    k <- as.integer(N/n)
+
+# EXAMEN
+
+# Ejercicicio 1 muestre estratificado (2.5)
+# - medio poblacional
+# - ⁠total poblacional
+# - ⁠varianza y error de muestreo del estimador
+
+# Supongamos que nos piden con afijación proporcional. Supongamos que tenemos unos vectores con los datos
+
+muestras <- list(x1, x2, x3, x4)
+medias <- sapply(muestras, function(estrato) mean(estrato))
+media_estimada <- sum(wh*medias)
+total_estimado <- N * media_estimada
+var_estimado <- sum(wh**2 * (1 - fh) * S2 / nh)
+error_estimado <- sqrt(var_estimado)
+
+# Supongamos que nos piden con afijación proporcional. Supongamos que tenemos unos vectores con los datos 
+
+muestras <- list(x1, x2, x3, x4)
+medias <- sapply(muestras, function(estrato) mean(estrato))
+media_estimada <- sum(wh*medias)
+total_estimado <- N * media_estimada
+var_estimado_min <- sum(wh**2 * S2 / nh)
+error_estimado_min <- sqrt(var_estimado_min)
+
+
+
+# Ejercicio 2: métodos indirectos de estimación:
+# •	⁠Razón
+# * ⁠Total y media
+# * ⁠Sesgo y error
+
+razon <- mean(y)/mean(x) # Suponiendo que la y es la variable de estudio y que depende del valor de X
+media_y_estimada <- mean(X)* razon  # Esta mean es la de la poblacional
+total_y_estimado <- N * media_y_estimada
+
+
+# Si nos preguntan por el sesgo de la razón
+f <- n/N
+sesgo_razon <- (1-f)*(R*var(y)**2 - cov(x,y))/(n*(mean(x)**2))
+varianza_estimada_razon <- (1 - f) / (n * mean(x)**2) * (var(y) + razon**2 * var(x) - 2 * razon * cov(x,y))
+error_sesgo <- sqrt(varianza_estimada_razon)
+
+
+
+# Ejercicio 3 conglomerados:
+# •⁠  ⁠media poblacional
+# •⁠  ⁠⁠total poblacional
+# •⁠  ⁠⁠varianza y error de muestreo del estimador
+
+# Si nos preguntan por una etapa con mismo tamaño 
+
+N <-      # número total de conglomerados en la población
+n <-      # número de conglomerados seleccionados
+Mbar <-   # tamaño de cada conglomerado
+
+M <- N * Mbar
+
+Xi <- sapply(datos, sum)     # total de cada conglomerado muestral
+xbari <- sapply(datos, mean) # media de cada conglomerado muestral
+
+f <- n / N
+
+media_estimada <- mean(xbari)
+total_estimado <- M * media_estimada
+
+s2_medias <- var(xbari)
+Vhat_media <- (1 - f) * s2_medias / n
+EE_media <- sqrt(Vhat_media)
+
+# Ejercicio 4 sistematico:
+# •⁠  ⁠función muestras_sistematicas
+# •⁠  ⁠⁠qué es un paso
+# •⁠  ⁠⁠varianza exacta de la media
+# •⁠  ⁠⁠estimar media y total dado un arranque
+# •⁠  ⁠⁠dado el mismo arranque varianza de diferencias sucesivas
+
+
+muestras_sistematicas_examen <- function(N,n){
+    k <- N/n 
+    if (k != floor(k)){stop("Para este tema, se estudia únicamente pasos enteros")}
+    k <- as.integer(k)
     muestras <- lapply(1:k, function(delta){
-    seq(from= delta, by=k, length.out = n)})
-    names(muestras) = paste0("delta", 1:k)
+        seq(from = delta, by = k, length.out= n)
+    })
+    names(muestras) = paste0("delta_", 1:k)
     muestras
 }
 
-hola <- muestras_sistematicas_dos(6,3) 
-hola
+# En muestreo sistemático, el paso es el salto fijo entre un elemento seleccionado y el siguiente dentro de una lista ordenada.
 
+muestras <- muestras_sistematicas_examen(N,n)
+medias <- sapply(muestras, function(sistema) mean(X[sistema]))
+media_pob <- mean(X)
+varianza_exacta <- mean((medias-media_pob)**2)
 
-###### 2 de Mayo del 2026 
-## En este día vamos a realizar dos ejercicios aleatorios de cada uno de los temas. Seran elegidos por R 
-# Tema 3
-tema3 <- sample.int(4,2)
-tema3
-# Haremos el ejercicio 8 y 9 
+# Estiamr la media dado el arranque 
+delta <- 3
+s1 <- seq(from = delta, by = k , length.out= n)
+x1 <- X[s1]
+media_estimada <- mean(x1)
+total_estimado <- N*media_estimada
 
-## EJERCICIO 8 
+# Varianza en sucesivas
+suma_dif <- sum(diff(x1)**2)
+varianza_sucesiva <- (1-f)*suma_dif/(2*N*(n-1))
+error_sucesivo <- sqrt(varianza_sucesiva)
 
-estrato <- c("I" , "II", "III")
-sigma <- c(4,12,80)
-wh <- c(0.6, 0.3, 0.1)
-N <- 1000
-Nh <- wh*N
-sh2 <- (Nh*sigma**2)/(Nh-1)
-
-afijacion_proporcional_sin <- (sum(wh*sh2))/(5 + (sum(wh*sh2))/N)
-afijacion_proporcional_sin
-nh <- wh * afijacion_proporcional_sin
-ceiling(nh)
-
-
-afijacion_proporcional_con <- (sum(wh*sh2))/5
-afijacion_proporcional_con
-nhc <- wh * afijacion_proporcional_con
-ceiling(nhc)
-
-
-## EJERCICIO 9
-Nh <- c(24, 36, 30, 30)
-N <- 120
-n <- 20 
-nh <- c(4,6,5,5)
-wh <- Nh/N
-fh <- nh/Nh
-s
-
-estrato1 = c(94, 90, 102, 110) 
-estrato2 = c(91, 99, 93, 105, 111, 101)
-estrato3 = c(108, 96, 100, 93, 93)
-estrato4 = c(92, 110, 94, 91, 113)
-muestras <- list(estrato1, estrato2, estrato3, estrato4)
-
-medias <- sapply(muestras, function(estrato) mean(estrato))
-medias
-varianzas <- sapply(muestras, function(estrato) var(estrato))
-varianzas
-media_muestras <- sum(wh*medias)
-media_muestras
-# [1] 99.3
-
-varianza <- sum((wh**2)*(1-fh)*varianzas*(1/nh))
-varianza
-error <- sqrt(varianza)
-error
-
-
-tema4 <- sample.int(4,2)
-tema4
-
-
-# Tema 4
-tema4 <- sample.int(10,2)
-tema4
-# Haremos el ejercicio 4 y 9
-
-# EJERCICIO 4
-
-N <- 10 
-n <- 3
-xi <- c(2,5,4)
-pi <- c(0.1, 0.2, 0.15)
-
-THH <- mean(xi/pi)
-THH
-
-var <- sum((xi/pi - THH)**2)/(n*(n-1))
-var
-# EJERCICIO 9
-
-N <- 60 
-X_bar <- 8 
-x <- c(6,7,8,9,10)
-y <- c(5,6,7,8,9)
-sx2<- var(x)
-sxy <- cov(x,y)
-
-b <- sxy/sx2
-Y_bar_hat <- mean(y) + b* (8- mean(x))
-Y_bar_hat 
-
-
-# Tema 5
-tema6 <- sample.int(12,2)
-tema6
-# Ejericio 7 y 9 
-
-# EJERCICIO 7 
-R1 <- c("B","A","M","M","B","M","A","A",
-"A","A","M","M","A","A","A","A",
-"A","B","B","M","A","A","A","B")
-indicador <- ifelse(R1=="A", 1,0)
-N <- length(R1)
-n <- 6 
-k <- N/N
-
-muestras <- muestras_sistematicas_dos(N,n)
-
-pj <- sapply(muestras, function(delta) mean(R1[delta] == "A"))
-qj <- 1- pj
-
-# EJERCICIO 9 
-x <- c(160,350,325,283,289,293,296,385,327,
-298,289,316,290,293,295,306,298,290)
-N <- 180
-n <- 18 
-f <- n/N
-k <- N/n 
-valor_total <- N*mean(x)
-
-sumdiff <- sum(diff(x)**2)
-var <- ((1-f)*sumdiff)/(2*n*(n-1))
-var_total <- var * N**2 
-error <- sqrt(var_total)
-error
-
-
-
-#########
-
-
-pii <- c(0.3, 0.4, 0.25)
-pij <- matrix(c(datos), nrow = 3, byrow = TRUE)
-
-B <- 0 
-
-for (i in 1:(length(x) -1)){
-    for (j in ((i+1) : length(x))){
-        B <- B + 2*
-    }
-}
+varianza_total_sucesiva <- N^2 * varianza_sucesiva
+error_total_sucesivo <- sqrt(varianza_total_sucesiva)

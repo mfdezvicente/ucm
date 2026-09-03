@@ -21,7 +21,7 @@ datos <- read.table(
   "C:/Users/Usuario/GitHub/ucm/Econometría_Aplicada/ENTREGA_3/Práctica 3_2 Habitos_Tabaco.txt",
   header = TRUE, sep = "\t"
 )
-
+head(datos)
 # Variable dependiente como factor
 datos$FUMA <- factor(datos$FUMA)  # niveles: "0","1","2" (según tu salida)
 

@@ -19,7 +19,7 @@ library(readxl)
 library(tseries)
 
 # Carga de datos
-df <- read_excel("/Users/miguelfernandez/GitHub/ucm/Econometría_Aplicada/Pr1_Datos.xlsx")
+df <- read_excel("ucm/Econometría_Aplicada/ENTREGA_1/Pr1_Datos.xlsx")
 
 # Echa un vistazo rápido a las variables
 # head(df)

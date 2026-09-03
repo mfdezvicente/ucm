@@ -18,6 +18,7 @@ library(readxl)
 library(lmtest)
 
 datos <- read_excel("ucm/Econometría_Aplicada/Datos_pr4.xlsx")
+datos <- read_excel("C:/Users/Usuario/GitHub/ucm/Econometría_Aplicada/ENTREGA_1/Datos_pr4.xlsx")
 # head(datos)
 # str(datos)
 
@@ -50,3 +51,4 @@ summary(modelo_wls)
 # Repetimos BP como comprobación tras ponderar
 bp_wls <- bptest(modelo_wls)
 bp_wls
+

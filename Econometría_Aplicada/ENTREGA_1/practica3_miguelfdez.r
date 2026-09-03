@@ -17,7 +17,8 @@ library(car)      # vif
 library(olsrr)    # ols_coll_diag
 library(tseries)  # Jarque-Bera
 
-datos <- read_excel("ucm/Econometría_Aplicada/Datos Hprice1.xls")
+#datos <- read_excel("ucm/Econometría_Aplicada/Datos Hprice1.xls")
+datos <- read_excel("C:/Users/Usuario/GitHub/ucm/Econometría_Aplicada/ENTREGA_1/Datos Hprice1.xls")
 # head(datos)
 # str(datos)
 

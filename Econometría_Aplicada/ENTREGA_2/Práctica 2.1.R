@@ -88,3 +88,4 @@ summary (modelo_bietc, diagnostics = 'T')
 # se rechaza la hipótesis nula de exogeneidad y por último, por el test de
 # Sargan no rechazamos la validez de los instrumentos y ambos cumplen la
 # Restricción de Exclusión. 
+

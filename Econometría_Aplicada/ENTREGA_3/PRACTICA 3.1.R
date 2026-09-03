@@ -107,6 +107,9 @@ slopes(
     nwifeinc = mean(datos$nwifeinc, na.rm = TRUE),
     expersq  = mean(datos$expersq, na.rm = TRUE)
   )
+
+
+
 )
 
 # ------------------------------------------------------------
@@ -130,7 +133,6 @@ diff(pred_logit)      # cambio marginal al pasar de 0->1->2->3 hijos pequeños
 
 pred_probit
 diff(pred_probit)
-
 # ------------------------------------------------------------
 # 7) Clasificación (umbral 0.5) + matriz de confusión
 # ------------------------------------------------------------
